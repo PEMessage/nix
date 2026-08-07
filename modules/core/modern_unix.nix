@@ -4,6 +4,7 @@
     neovim
     fzf
     ripgrep
+    tealdeer
   ];
 
   # will auto enable nix-community/nix-zsh-completions
