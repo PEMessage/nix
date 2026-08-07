@@ -11,7 +11,18 @@
     nixfmt
     tree-sitter
     gh
+    chezmoi
   ];
+
+  home.file.".profile".text = ''
+    # if running bash
+    if [ -n "$BASH_VERSION" ]; then
+      # include .bashrc if it exists
+      if [ -f "$HOME/.bashrc" ]; then
+      . "$HOME/.bashrc"
+      fi
+    fi
+  '';
 
   home.activation.runChezmoi = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -d "$HOME/.local/share/chezmoi" ] ; then

@@ -2,13 +2,12 @@
 {
   environment.systemPackages = with pkgs; [
     neovim
-    chezmoi
+    fzf
+    ripgrep
   ];
 
   # will auto enable nix-community/nix-zsh-completions
   programs.zsh.enable = true;
-
-
   environment.shells = [ pkgs.zsh ];
 
 }

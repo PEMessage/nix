@@ -5,6 +5,7 @@
     vim
     which
     python3
+    tmux
 
     # build
     gcc
@@ -17,5 +18,7 @@
     "nix-command"
     "flakes"
   ];
+
+  programs.bash.enable = true;
 
 }
