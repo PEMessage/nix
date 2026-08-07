@@ -28,7 +28,6 @@
           ./hosts/wsl/configuration.nix
 
           ./modules/core/core.nix
-          ./modules/core/nixos.nix
           ./modules/core/modern_unix.nix
           ./modules/core/home-manager-integration.nix
           ({ config, ... }: {
