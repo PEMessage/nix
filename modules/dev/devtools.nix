@@ -7,6 +7,9 @@
 
     # bun
     bun
+
+    # uv
+    uv
   ];
 
 }
