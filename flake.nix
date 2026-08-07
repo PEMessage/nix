@@ -38,6 +38,8 @@
           })
 
           ./modules/dev/devtools.nix
+
+          ./modules/gui/fonts.nix
         ];
       };
     };
