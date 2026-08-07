@@ -4,6 +4,8 @@
     git
     vim
     which
+    python3
+
     # build
     gcc
     gnumake

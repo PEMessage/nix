@@ -26,6 +26,7 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/wsl/configuration.nix
+
           ./modules/core/core.nix
           ./modules/core/nixos.nix
           ./modules/core/modern_unix.nix
@@ -33,9 +34,11 @@
           ({ config, ... }: {
             home = {
               userName = config.wsl.defaultUser;
-              configFile = ./home.nix; # 这里明确相对于 flake.nix
+              configFile = ./home.nix;
             };
           })
+
+          ./modules/dev/devtools.nix
         ];
       };
     };
