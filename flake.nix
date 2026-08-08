@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "NixOS / home-manager configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-26.05";
@@ -12,35 +12,27 @@
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
-  outputs =
-    inputs:
-    let
-      inherit (inputs) nixpkgs;
-    in
-    {
-      nixosConfigurations.wsl = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/wsl/configuration.nix
-
-          ./modules/core/core.nix
-          ./modules/core/modern_unix.nix
-          ./modules/core/home-manager-integration.nix
-          ({ config, ... }: {
-            home = {
-              userName = config.wsl.defaultUser;
-              configFile = ./home.nix;
-            };
-          })
-
-          ./modules/dev/devtools.nix
-
-          ./modules/gui/fonts.nix
-        ];
-      };
+  # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop)
+  outputs = inputs: {
+    nixosConfigurations.wsl = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/wsl/configuration.nix
+        ./os/core.nix
+        ./os/dev.nix
+        ./os/gui.nix
+        ({ config, ... }: {
+          home.userName = config.wsl.defaultUser;
+          home.groupModules = [
+            ./home/core.nix
+            ./home/dev.nix
+            ./home/gui.nix
+          ];
+        })
+      ];
     };
+  };
 }
