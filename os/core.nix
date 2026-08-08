@@ -6,49 +6,39 @@
   ...
 }:
 let
-  cfg = config.home;
+  unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
 in
 {
-  imports = [ inputs.home-manager.nixosModules.home-manager ];
-
-  options.home = {
-    userName = lib.mkOption {
-      type = lib.types.str;
-      description = "System username for home-manager.";
-    };
-
-    groupModules = lib.mkOption {
-      type = lib.types.listOf lib.types.path;
-      description = "Home-manager modules selected by the host profile groups.";
-    };
-
-    extraSpecialArgs = lib.mkOption {
-      type = lib.types.attrs;
-      default = { inherit inputs; };
-    };
-  };
+  imports = [
+    ./modules/home-manager.nix
+  ];
 
   config = {
-    environment.systemPackages = with pkgs; [
-      git
-      vim
-      which
-      python3
-      tmux
+    environment.systemPackages =
+      with pkgs;
+      [
+        git
+        vim
+        which
+        python3
 
-      # build
-      gcc
-      gnumake
-      binutils
-      autoconf
-      automake
+        # build
+        gcc
+        gnumake
+        binutils
+        autoconf
+        automake
 
-      # modern unix
-      neovim
-      fzf
-      ripgrep
-      tealdeer
-    ];
+        # modern unix
+        neovim
+        fzf
+        ripgrep
+        tealdeer
+      ]
+      ++ [
+        # tmux: latest from nixpkgs-unstable
+        unstable.tmux
+      ];
 
     nix.settings.experimental-features = [
       "nix-command"
@@ -67,14 +57,5 @@ in
     programs.zsh.enable = true;
     environment.shells = [ pkgs.zsh ];
     users.defaultUserShell = pkgs.zsh;
-
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      users.${cfg.userName} = {
-        imports = cfg.groupModules;
-      };
-      extraSpecialArgs = cfg.extraSpecialArgs;
-    };
   };
 }
