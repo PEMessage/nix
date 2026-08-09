@@ -2,6 +2,10 @@
 # Enabled on real desktop hosts, not on WSL.
 { config, pkgs, ... }:
 {
+  imports = [
+    ./modules/gnome.nix
+  ];
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
