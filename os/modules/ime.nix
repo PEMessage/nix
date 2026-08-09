@@ -47,6 +47,8 @@
         schema_list:
           - schema: rime_ice
           - schema: double_pinyin_mspy
+        menu:
+          page_size: 8
     '';
   };
 
