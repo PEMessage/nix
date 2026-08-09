@@ -4,6 +4,7 @@
 {
   imports = [
     ./modules/gnome.nix
+    ./modules/app.nix
   ];
 
   # Enable the X11 windowing system.
