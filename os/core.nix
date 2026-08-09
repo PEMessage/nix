@@ -57,5 +57,7 @@ in
     programs.zsh.enable = true;
     environment.shells = [ pkgs.zsh ];
     users.defaultUserShell = pkgs.zsh;
+
+    nixpkgs.config.allowUnfree = true;
   };
 }

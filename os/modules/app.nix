@@ -2,5 +2,6 @@
 {
   environment.systemPackages = with pkgs; [
     ghostty
+    google-chrome
   ];
 }
