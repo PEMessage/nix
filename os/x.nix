@@ -4,6 +4,7 @@
 {
   imports = [
     ./modules/niri.nix
+    ./modules/ime.nix
     ./modules/app.nix
   ];
 
