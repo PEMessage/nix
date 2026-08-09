@@ -4,5 +4,6 @@
     ghostty
     google-chrome
     deskflow
+    xclip
   ];
 }
