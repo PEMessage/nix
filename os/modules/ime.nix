@@ -11,7 +11,12 @@
       waylandFrontend = true;
       addons = with pkgs; [
         qt6Packages.fcitx5-chinese-addons
-        fcitx5-rime
+        fcitx5-fluent
+        (fcitx5-rime.override {
+         rimeDataPkgs = [
+         pkgs.rime-ice
+         ];
+         })
         librime
       ];
     };
@@ -29,6 +34,20 @@
     # Qt 6.7–6.8.1 needs an explicit fallback chain to reach Fcitx over
     # text-input-v3; Qt5 (XWayland) falls back to the bundled Qt IM module.
     QT_IM_MODULES = "wayland;fcitx";
+  };
+
+  # Rime's default.custom.yaml lives in the user data dir
+  # (~/.local/share/fcitx5/rime), so manage it via home-manager. home-manager's
+  # NixOS module is already imported by os/modules/home-manager.nix, so this
+  # can stay in the same file.
+  home-manager.users.${config.home.userName}.home.file.".local/share/fcitx5/rime/default.custom.yaml" = {
+    text = ''
+      patch:
+        __include: rime_ice_suggestion:/
+        schema_list:
+          - schema: rime_ice
+          - schema: double_pinyin_mspy
+    '';
   };
 
   # With the Wayland frontend nothing dbus-activates Fcitx, so start it
