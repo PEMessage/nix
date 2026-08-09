@@ -9,6 +9,7 @@
       # with its Wayland frontend: no toolkit IM env vars are needed and the
       # compositor positions the candidate popup correctly.
       waylandFrontend = true;
+      # Thanks to https://zhuanlan.zhihu.com/p/1963358188226183647
       addons = with pkgs; [
         qt6Packages.fcitx5-chinese-addons
         fcitx5-fluent
