@@ -34,5 +34,26 @@
         })
       ];
     };
+
+    nixosConfigurations.pro830 = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/pro830/configuration.nix
+        ./os/core.nix
+        ./os/dev.nix
+        ./os/gui.nix
+        ./os/x.nix
+        ({ config, ... }: {
+          home.userName = "pem";
+          home.groupModules = [
+            ./home/core.nix
+            ./home/dev.nix
+            ./home/gui.nix
+            ./home/x.nix
+          ];
+        })
+      ];
+    };
   };
 }
