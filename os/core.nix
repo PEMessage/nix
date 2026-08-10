@@ -21,6 +21,7 @@ in
         vim
         which
         python3
+        wget
 
         # build
         gcc
