@@ -1,6 +1,6 @@
 # x: desktop (X11 / Wayland) system configuration.
 # Enabled on real desktop hosts, not on WSL.
-{ config, pkgs, ... }:
+{ config, pkgs, options, ... }:
 {
   imports = [
     ./modules/niri.nix
@@ -31,5 +31,25 @@
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
+  };
+
+  programs.nix-ld = {
+    libraries = with pkgs; [
+      # fonts
+      fontconfig
+      freetype
+
+      glib
+      dbus
+      libGL
+      libxcb
+
+      # wayland
+      wayland
+      wayland-protocols
+
+      # keyboard
+      libxkbcommon
+    ];
   };
 }

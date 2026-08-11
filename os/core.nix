@@ -14,6 +14,13 @@ in
   ];
 
   config = {
+
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    nixpkgs.config.allowUnfree = true;
+
     environment.systemPackages =
       with pkgs;
       [
@@ -40,11 +47,8 @@ in
         # tmux: latest from nixpkgs-unstable
         unstable.tmux
       ];
+    environment.localBinInPath = true;
 
-    nix.settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
 
     #Error during "tree-sitter build": Could not start dynamically linked executable: tree-sitter
     #NixOS cannot run dynamically linked executables intended for generic
@@ -52,6 +56,8 @@ in
     #https://nix.dev/permalink/stub-ld
     programs.nix-ld.enable = true;
 
+    # Shell
+    # ===================================
     programs.bash.enable = true;
 
     # will auto enable nix-community/nix-zsh-completions
@@ -59,6 +65,5 @@ in
     environment.shells = [ pkgs.zsh ];
     users.defaultUserShell = pkgs.zsh;
 
-    nixpkgs.config.allowUnfree = true;
   };
 }
