@@ -37,6 +37,9 @@ in
         autoconf
         automake
 
+        # zip
+        _7zz
+
         # modern unix
         neovim
         fzf
