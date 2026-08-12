@@ -1,5 +1,16 @@
 {
   description = "NixOS / home-manager configuration";
+  nixConfig = rec {
+    extra-substituters = [
+      "https://noctalia.cachix.org"
+      "https://niri.cachix.org"
+    ];
+    extra-trusted-substituters = extra-substituters;
+    extra-trusted-public-keys = [
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
+    ];
+  };
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-26.05";
@@ -28,12 +39,14 @@
         ./os/core.nix
         ./os/dev.nix
         ./os/gui.nix
+        ./os/x.nix
         ({ config, ... }: {
           home.userName = config.wsl.defaultUser;
           home.groupModules = [
             ./home/core.nix
             ./home/dev.nix
             ./home/gui.nix
+            ./home/x.nix
           ];
         })
       ];
