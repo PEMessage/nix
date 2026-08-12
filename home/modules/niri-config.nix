@@ -61,6 +61,41 @@
       "Mod+Ctrl+J".action.move-window-down-or-to-workspace-down = [];
       "Mod+Ctrl+K".action.move-window-up-or-to-workspace-up = [];
       "Mod+Ctrl+L".action.move-column-right = [];
+
+      # Move
+      "Mod+BracketLeft".action.consume-or-expel-window-left = [];
+      "Mod+BracketRight".action.consume-or-expel-window-right = [];
+
+      # Finer width adjustments.
+      "Mod+Minus".action.set-column-width = [ "-10%" ];
+      "Mod+Equal".action.set-column-width = [ "+10%" ];
+
+      # Finer height adjustments when in column with other windows.
+      "Mod+Shift+Minus".action.set-window-height = [ "-10%" ];
+      "Mod+Shift+Equal".action.set-window-height = [ "+10%" ];
+
+      # Move the focused window between the floating and the tiling layout.
+      "Mod+V".action.toggle-window-floating = [];
+      "Mod+Shift+V".action.switch-focus-between-floating-and-tiling = [];
+
+      "Mod+F".action.maximize-column = [];
+      "Mod+Shift+F".action.fullscreen-window = [];
+
+      # While maximize-column leaves gaps and borders around the window,
+      # maximize-window-to-edges doesn't: the window expands to the edges
+      # of the screen. This bind corresponds to normal window maximizing,
+      # e.g. by double-clicking on the titlebar.
+      "Mod+M".action.maximize-window-to-edges = [];
+
+      # Expand the focused column to space not taken up by other fully
+      # visible columns. Makes the column "fill the rest of the space".
+      "Mod+Ctrl+F".action.expand-column-to-available-width = [];
+
+      "Print".action.screenshot = [];
+      "Ctrl+Print".action.screenshot-screen = [];
+      "Alt+Print".action.screenshot-window = [];
+      "Mod+Shift+S".action.screenshot = [];
+      "Ctrl+Alt+Delete".action.quit = [];
     };
   };
 
