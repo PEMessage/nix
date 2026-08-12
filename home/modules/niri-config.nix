@@ -33,9 +33,9 @@
       };
       "Mod+D" = {
         hotkey-overlay = {
-          title = "Run an Application: fuzzel";
+          title = "Open Noctalia Launcher";
         };
-        action.spawn = [ "fuzzel" ];
+        action.spawn = [ "noctalia" "msg" "panel-toggle" "launcher" ];
       };
       "Mod+O" = { repeat = false; action.toggle-overview = []; };
       "Mod+Q" = { repeat = false; action.close-window = []; };
@@ -56,6 +56,11 @@
       "Mod+J".action.focus-window-or-workspace-down = [];
       "Mod+K".action.focus-window-or-workspace-up = [];
       "Mod+L".action.focus-column-right = [];
+      # Mod+Alt+L locks the screen via noctalia.
+      "Mod+Alt+L" = {
+        hotkey-overlay = { title = "Lock the Screen"; };
+        action.spawn = [ "noctalia" "msg" "session" "lock" ];
+      };
 
       "Mod+Ctrl+H".action.move-column-left = [];
       "Mod+Ctrl+J".action.move-window-down-or-to-workspace-down = [];
@@ -86,8 +91,8 @@
       "Mod+Shift+Minus".action.set-window-height = [ "-10%" ];
       "Mod+Shift+Equal".action.set-window-height = [ "+10%" ];
 
-      # Move the focused window between the floating and the tiling layout.
-      "Mod+V".action.toggle-window-floating = [];
+      # Open the Noctalia clipboard panel.
+      "Mod+V".action.spawn = [ "noctalia" "msg" "panel-toggle" "clipboard" ];
       "Mod+Shift+V".action.switch-focus-between-floating-and-tiling = [];
 
       "Mod+F".action.maximize-column = [];
