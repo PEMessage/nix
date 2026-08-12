@@ -4,11 +4,7 @@
   pkgs,
   inputs,
   ...
-}:
-let
-  unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
-in
-{
+}: {
   environment.systemPackages = with pkgs; [
     ghostty
     google-chrome
@@ -29,7 +25,7 @@ in
     # The group to grant access to clash-verge-rev’s service socket.
     group = "users";
     # latest from nixpkgs-unstable
-    package = unstable.clash-verge-rev;
+    package = pkgs.unstable.clash-verge-rev;
     serviceMode = true;
     tunMode = true;
     autoStart = true;

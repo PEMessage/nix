@@ -5,9 +5,6 @@
   inputs,
   ...
 }:
-let
-  unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.system};
-in
 {
   imports = [
     ./modules/home-manager.nix
@@ -20,6 +17,17 @@ in
       "flakes"
     ];
     nixpkgs.config.allowUnfree = true;
+
+    # Expose nixpkgs-unstable as pkgs.unstable everywhere (NixOS + home-manager).
+    # Thanks to: https://github.com/cole-glotfelty/nixcfg.git
+    nixpkgs.overlays = [
+      (final: _prev: {
+        unstable = import inputs.nixpkgs-unstable {
+          system = final.stdenv.hostPlatform.system;
+          config.allowUnfree = true;
+        };
+      })
+    ];
 
     environment.systemPackages =
       with pkgs;
@@ -48,7 +56,7 @@ in
       ]
       ++ [
         # tmux: latest from nixpkgs-unstable
-        unstable.tmux
+        pkgs.unstable.tmux
       ];
     environment.localBinInPath = true;
 
