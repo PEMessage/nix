@@ -34,9 +34,6 @@
     package = pkgs.niri;
   };
 
-  environment.systemPackages = with pkgs; [
-    fuzzel
-  ];
   # Lightweight login manager with autologin straight into niri.
   services.greetd = {
     enable = true;
@@ -50,4 +47,9 @@
 
   # No display manager needed, greetd takes over the login screen.
   services.displayManager.enable = false;
+
+  environment.systemPackages = with pkgs; [
+    fuzzel
+    swaylock
+  ];
 }
