@@ -50,7 +50,7 @@
   # services.xserver.enable = true;
 
 
-  
+
 
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
@@ -74,7 +74,7 @@
   users.users.pem = {
     isNormalUser = true;
     group = "pem";   # nixos-install prompt this !
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "video" "users" ]; # Enable 'sudo' for the user, backlight for brightnessctl.
     packages = with pkgs; [
       tree
     ];
