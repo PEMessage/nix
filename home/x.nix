@@ -7,4 +7,7 @@
   ...
 }:
 {
+  imports = [
+    ./modules/niri-config.nix
+  ];
 }

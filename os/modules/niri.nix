@@ -3,6 +3,7 @@
 {
   imports = [
     inputs.noctalia.nixosModules.default
+    inputs.niri.nixosModules.niri
   ];
 
   programs.noctalia = {
@@ -27,12 +28,12 @@
     # nixos-wsl module (e.g. pro830) from failing to evaluate.
     recommendedServices.enable = !(config.wsl.enable or false);
   };
-  nix.settings = {
-    extra-substituters = [ "https://noctalia.cachix.org" ];
-    extra-trusted-public-keys = [ "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=" ];
+
+  programs.niri = {
+    enable = true;
+    package = pkgs.niri;
   };
 
-  programs.niri.enable = true;
   environment.systemPackages = with pkgs; [
     fuzzel
   ];
