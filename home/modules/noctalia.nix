@@ -11,5 +11,8 @@
 
     [plugin_settings."nzlov/daily-wallpaper"]
     source = "bing"
+
+    [shell]
+    polkit_agent = true
   '';
 }
