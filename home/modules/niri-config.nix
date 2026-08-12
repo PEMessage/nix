@@ -66,6 +66,18 @@
       "Mod+BracketLeft".action.consume-or-expel-window-left = [];
       "Mod+BracketRight".action.consume-or-expel-window-right = [];
 
+      # Consume one window from the right to the bottom of the focused column.
+      "Mod+Comma".action.consume-window-into-column = [];
+      # Expel the bottom window from the focused column to the right.
+      "Mod+Period".action.expel-window-from-column = [];
+
+      "Mod+R".action.switch-preset-column-width = [];
+      # Cycling through the presets in reverse order is also possible.
+      "Mod+Shift+R".action.switch-preset-column-width-back = [];
+
+      "Mod+Ctrl+Shift+R".action.switch-preset-window-height = [];
+      "Mod+Ctrl+R".action.reset-window-height = [];
+
       # Finer width adjustments.
       "Mod+Minus".action.set-column-width = [ "-10%" ];
       "Mod+Equal".action.set-column-width = [ "+10%" ];
@@ -90,6 +102,12 @@
       # Expand the focused column to space not taken up by other fully
       # visible columns. Makes the column "fill the rest of the space".
       "Mod+Ctrl+F".action.expand-column-to-available-width = [];
+
+      # Mouse
+      "Mod+WheelScrollDown" = { cooldown-ms = 150; action.focus-workspace-down = []; };
+      "Mod+WheelScrollUp" = { cooldown-ms = 150; action.focus-workspace-up = []; };
+      "Mod+Ctrl+WheelScrollDown" = { cooldown-ms = 150; action.move-column-to-workspace-down = []; };
+      "Mod+Ctrl+WheelScrollUp" = { cooldown-ms = 150; action.move-column-to-workspace-up = []; };
 
       "Print".action.screenshot = [];
       "Ctrl+Print".action.screenshot-screen = [];
