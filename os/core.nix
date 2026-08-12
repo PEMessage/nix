@@ -16,6 +16,12 @@
       "nix-command"
       "flakes"
     ];
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 21d";
+    };
+    nix.optimise.automatic = true;
     nixpkgs.config.allowUnfree = true;
 
     # Expose nixpkgs-unstable as pkgs.unstable everywhere (NixOS + home-manager).
