@@ -36,6 +36,7 @@
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
     gnomeExtensions.blur-my-shell
+    gnomeExtensions.dynamic-wallpaper-fetcher
     papirus-icon-theme
   ];
 
@@ -43,14 +44,15 @@
   # enable via dconf, since NixOS has no gnome.extensions option anymore).
   home-manager.users.${config.home.userName}.dconf.settings = {
     "org/gnome/shell" = {
-      enabled-extensions = [
-        "appindicatorsupport@rgcjonas.gmail.com"
-        "kimpanel@kde.org"
-        "blur-my-shell@aunetx"
+      enabled-extensions = with pkgs.gnomeExtensions; [
+        appindicator.extensionUuid
+        kimpanel.extensionUuid
+        blur-my-shell.extensionUuid
+        dynamic-wallpaper-fetcher.extensionUuid
       ];
     };
 
-    # Theme: dark mode + adw-gtk3 + Papirus icons
+    # Theme: dark mode + Papirus icons
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
       icon-theme = "Papirus-Dark";
