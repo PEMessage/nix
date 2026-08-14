@@ -8,7 +8,7 @@
 }:
 {
   imports = [
-    ./modules/niri-config.nix
-    ./modules/noctalia.nix
+    # ./modules/niri-config.nix
+    # ./modules/noctalia.nix
   ];
 }
