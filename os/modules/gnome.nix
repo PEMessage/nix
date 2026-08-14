@@ -29,19 +29,31 @@
     yelp
   ];
 
-  # AppIndicator tray icons (fcitx5 status icon) and Kimpanel (fcitx5
-  # candidate popup over GNOME Shell; fcitx's own popup cannot be shown there).
+  # AppIndicator tray icons (fcitx5 status icon), Kimpanel (fcitx5
+  # candidate popup over GNOME Shell), shell beautification (blur + dock),
   environment.systemPackages = with pkgs; [
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
+    gnomeExtensions.blur-my-shell
+    papirus-icon-theme
   ];
 
   # Enable the extensions declaratively (docs: install via systemPackages,
   # enable via dconf, since NixOS has no gnome.extensions option anymore).
-  home-manager.users.${config.home.userName}.dconf.settings."org/gnome/shell" = {
-    enabled-extensions = [
-      "appindicatorsupport@rgcjonas.gmail.com"
-      "kimpanel@kde.org"
-    ];
+  home-manager.users.${config.home.userName}.dconf.settings = {
+    "org/gnome/shell" = {
+      enabled-extensions = [
+        "appindicatorsupport@rgcjonas.gmail.com"
+        "kimpanel@kde.org"
+        "blur-my-shell@aunetx"
+      ];
+    };
+
+    # Theme: dark mode + adw-gtk3 + Papirus icons
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      icon-theme = "Papirus-Dark";
+    };
+
   };
 }
