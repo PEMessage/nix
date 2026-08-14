@@ -8,9 +8,11 @@
   environment.systemPackages = with pkgs; [
     ghostty
     google-chrome
-    deskflow
     xclip
   ];
+
+  # Flatpak support (deskflow installed manually via flatpak).
+  services.flatpak.enable = true;
 
   # Use the nixpkgs-unstable clash-verge module instead of the stable one:
   # stable's module sets ProtectSystem=strict without StateDirectory, so the

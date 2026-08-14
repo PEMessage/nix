@@ -30,7 +30,8 @@
   ];
 
   # AppIndicator tray icons (fcitx5 status icon), Kimpanel (fcitx5
-  # candidate popup over GNOME Shell), shell beautification (blur + dock),
+  # candidate popup over GNOME Shell), blur-my-shell (overview blur),
+  # Papirus icon theme.
   environment.systemPackages = with pkgs; [
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
