@@ -5,11 +5,14 @@
     type = "fcitx5";
     enable = true;
     fcitx5 = {
-      # niri implements text-input-v3 and zwp_input_method_v2, so Fcitx runs
-      # with its Wayland frontend: no toolkit IM env vars are needed and the
-      # compositor positions the candidate popup correctly.
-      waylandFrontend = true;
-      # Thanks to https://zhuanlan.zhihu.com/p/1963358188226183647
+      # GNOME (mutter) does not implement zwp_input_method_v2: GNOME Shell
+      # talks to Fcitx over the IBus D-Bus protocol (fcitx5 is built with its
+      # ibus frontend) and Qt/GTK Wayland apps use text-input-v3. The NixOS
+      # module suppresses the toolkit IM env vars (GTK_IM_MODULE/QT_IM_MODULE)
+      # when waylandFrontend is true, which XWayland apps need on GNOME — so
+      # only use the Wayland frontend on compositors that implement
+      # input_method_v2 (e.g. niri).
+      waylandFrontend = !config.services.desktopManager.gnome.enable;
       addons = with pkgs; [
         qt6Packages.fcitx5-chinese-addons
         fcitx5-fluent
@@ -32,8 +35,9 @@
   environment.sessionVariables = {
     # XIM bridge for X11/XWayland applications.
     XMODIFIERS = "@im=fcitx";
-    # Qt 6.7–6.8.1 needs an explicit fallback chain to reach Fcitx over
-    # text-input-v3; Qt5 (XWayland) falls back to the bundled Qt IM module.
+    # Qt 6.8.2+ implements text-input-v3, so use the compositor path first
+    # and fall back to Fcitx; Qt5 (XWayland) uses QT_IM_MODULE=fcitx set by
+    # the NixOS module.
     QT_IM_MODULES = "wayland;fcitx";
   };
 
@@ -53,8 +57,9 @@
     '';
   };
 
-  # With the Wayland frontend nothing dbus-activates Fcitx, so start it
-  # explicitly with the graphical session.
+  # On GNOME the XDG autostart file ships with the package
+  # (etc/xdg/autostart/org.fcitx.Fcitx5.desktop), so no explicit service is
+  # needed. This was only required on niri, which runs no XDG autostart:
   # systemd.user.services.fcitx5-daemon = {
   #   description = "Fcitx5 input method service";
   #   wantedBy = [ "graphical-session.target" ];
