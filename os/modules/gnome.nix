@@ -1,6 +1,10 @@
 { config, lib, pkgs, inputs, ... }:
 {
   services.displayManager.gdm.enable = true;
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = config.home.userName;
+  };
   services.desktopManager.gnome.enable = true;
 
   # Trim GNOME defaults: no games, and drop the core apps we don't use.
