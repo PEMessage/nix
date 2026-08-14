@@ -37,6 +37,7 @@
     gnomeExtensions.kimpanel
     gnomeExtensions.blur-my-shell
     gnomeExtensions.dynamic-wallpaper-fetcher
+    gnomeExtensions.rounded-window-corners
     papirus-icon-theme
   ];
 
@@ -49,6 +50,7 @@
         kimpanel.extensionUuid
         blur-my-shell.extensionUuid
         dynamic-wallpaper-fetcher.extensionUuid
+        rounded-window-corners.extensionUuid
       ];
     };
 
