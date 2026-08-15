@@ -50,13 +50,15 @@
 
   imports = [
     inputs.gnome-rounded-blur.nixosModules.default
-    ./gnome-fluent.nix
+    # ./gnome-fluent.nix
+    ./gnome-whitesur.nix   # macOS style; only one theme module at a time
   ];
 
 
   # AppIndicator tray icons (fcitx5 status icon), Kimpanel (fcitx5
   # candidate popup over GNOME Shell), blur-my-shell (overview blur),
-  # dash-to-dock (dock), Papirus icon theme.
+  # dash-to-dock (dock), auto-accent-colour (accent follows wallpaper),
+  # Papirus icon theme.
   environment.systemPackages = with pkgs; [
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
