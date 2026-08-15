@@ -78,9 +78,15 @@
     };
 
     "org/gnome/desktop/wm/keybindings" = {
-      toggle-quick-settings = []; # remove Super+S
       close = [ "<Super>q" ];
     };
+
+    "org/gnome/shell/keybindings" = {
+      toggle-quick-settings = []; # remove Super+S
+      # Windows-style screenshot trigger: Super+Shift+S.
+      show-screenshot-ui = [ "<Super><Shift>s" ];
+    };
+
 
     # Thanks to: https://github.com/gierens/dotfiles/blob/e0beaad0658427b63bf618be62589fc826aa70be/home/dconf.nix#L34-L40
     "org/gnome/settings-daemon/plugins/media-keys" = {
@@ -167,7 +173,7 @@
     };
 
     "org/gnome/shell/extensions/paperwm/keybindings" = {
-      take-window  = []; # Remove Super+T
+      take-window  = ["<Super>w"]; # Remove Super+T, using Super+w instead
       live-alt-tab = ["<Alt>Tab"]; # Remove Super+Tab
     };
 
