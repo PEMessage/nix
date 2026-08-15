@@ -4,7 +4,8 @@
 {
   imports = [
     # ./modules/niri.nix
-    ./modules/gnome
+    # ./modules/gnome
+    ./modules/kde.nix
     ./modules/ime.nix
     ./modules/app.nix
   ];
