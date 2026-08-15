@@ -35,7 +35,7 @@
 
   # AppIndicator tray icons (fcitx5 status icon), Kimpanel (fcitx5
   # candidate popup over GNOME Shell), blur-my-shell (overview blur),
-  # Papirus icon theme.
+  # dash-to-dock (dock), Papirus icon theme.
   environment.systemPackages = with pkgs; [
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
@@ -48,6 +48,15 @@
   # Enable the extensions declaratively (docs: install via systemPackages,
   # enable via dconf, since NixOS has no gnome.extensions option anymore).
   home-manager.users.${config.home.userName}.dconf.settings = {
+    # Never auto-lock the screen
+    "org/gnome/desktop/screensaver" = {
+      lock-enabled = false;
+    };
+
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = ":minimize,maximize,close";
+    };
+
     "org/gnome/shell" = {
       enabled-extensions = with pkgs.gnomeExtensions; [
         appindicator.extensionUuid
