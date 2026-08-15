@@ -75,5 +75,15 @@
       icon-theme = "Papirus-Dark";
     };
 
+
+
+    # blur-my-shell
+    # ==========================
+
+    "org/gnome/shell/extensions/blur-my-shell/overview" = {
+        style-components = 3;
+    };
+
+
   };
 }
