@@ -60,7 +60,7 @@
     gnomeExtensions.blur-my-shell
     # gnomeExtensions.dash-to-dock
     gnomeExtensions.dynamic-wallpaper-fetcher
-    gnomeExtensions.rounded-window-corners
+    # gnomeExtensions.rounded-window-corners
     gnomeExtensions.paperwm
     papirus-icon-theme
   ];
@@ -121,7 +121,7 @@
         blur-my-shell.extensionUuid
         # dash-to-dock.extensionUuid
         dynamic-wallpaper-fetcher.extensionUuid
-        rounded-window-corners.extensionUuid
+        # rounded-window-corners.extensionUuid
         paperwm.extensionUuid
       ];
     };
@@ -167,8 +167,8 @@
     };
 
     "org/gnome/shell/extensions/paperwm/keybindings" = {
-      take-window=[]; # Remove Super+T
-      live-alt-tab=["<Alt>Tab"] # Remove Super+Tab
+      take-window  = []; # Remove Super+T
+      live-alt-tab = ["<Alt>Tab"]; # Remove Super+Tab
     };
 
   };
