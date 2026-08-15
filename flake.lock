@@ -16,6 +16,26 @@
         "type": "github"
       }
     },
+    "gnome-rounded-blur": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780593028,
+        "narHash": "sha256-YKD1JWYYoP33dTRIjr/5afa3zSmijyBE4dguLZabOLY=",
+        "owner": "Klazkin",
+        "repo": "nix-gnome-rounded-blur",
+        "rev": "f8703533a0aac37d8080b4caec7da0ede1ae6681",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Klazkin",
+        "repo": "nix-gnome-rounded-blur",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -186,6 +206,7 @@
     },
     "root": {
       "inputs": {
+        "gnome-rounded-blur": "gnome-rounded-blur",
         "home-manager": "home-manager",
         "niri": "niri",
         "nixos-wsl": "nixos-wsl",

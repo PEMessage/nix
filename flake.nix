@@ -33,6 +33,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    gnome-rounded-blur = {
+      url = "github:Klazkin/nix-gnome-rounded-blur";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop)

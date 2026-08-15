@@ -48,6 +48,9 @@
     yelp
   ];
 
+  imports = [ inputs.gnome-rounded-blur.nixosModules.default ];
+
+
   # AppIndicator tray icons (fcitx5 status icon), Kimpanel (fcitx5
   # candidate popup over GNOME Shell), blur-my-shell (overview blur),
   # dash-to-dock (dock), Papirus icon theme.
@@ -96,7 +99,12 @@
     # ==========================
 
     "org/gnome/shell/extensions/blur-my-shell/overview" = {
-        style-components = 3;
+      style-components = 3;
+    };
+
+    "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
+      static-blur = false;
+      corner-radius = 28;
     };
 
 
