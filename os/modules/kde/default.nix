@@ -98,25 +98,15 @@
         };
         borderlessMaximizedWindows = true;
         nightLight.enable = true;
-        virtualDesktops.number = 4;
       };
 
       # Floating, adaptive-transparency panel (blur kicks in over windows).
       panels = [
         {
           location = "bottom";
-          height = 44;
           alignment = "center";
           floating = true;
           opacity = "adaptive";
-          widgets = [
-            "org.kde.plasma.kickoff"
-            "org.kde.plasma.icontasks"
-            "org.kde.plasma.marginsseparator"
-            "org.kde.plasma.systemtray"
-            "org.kde.plasma.digitalclock"
-            "org.kde.plasma.showdesktop"
-          ];
         }
       ];
 
