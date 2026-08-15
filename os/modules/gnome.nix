@@ -77,6 +77,43 @@
       button-layout = ":minimize,maximize,close";
     };
 
+    "org/gnome/desktop/wm/keybindings" = {
+      toggle-quick-settings = []; # remove Super+S
+      close = [ "<Super>q" ];
+    };
+
+    # Thanks to: https://github.com/gierens/dotfiles/blob/e0beaad0658427b63bf618be62589fc826aa70be/home/dconf.nix#L34-L40
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/browser/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/files/"
+      ];
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/terminal" = {
+      binding = "<Super>t";
+      command = "ghostty";
+      name = "terminal";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/browser" = {
+      binding = "<Super>b";
+      command = "google-chrome";
+      name = "browser";
+    };
+
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/files" = {
+      binding = "<Super>e";
+      command = "nautilus";
+      name = "files";
+    };
+
+
+    # ==========================
+    # Extensions
+    # ==========================
+
     "org/gnome/shell" = {
       enabled-extensions = with pkgs.gnomeExtensions; [
         appindicator.extensionUuid
@@ -119,9 +156,8 @@
       # margin
       selection-border-size           = 10;
       window-gap                      = 20;
-      vertical-margin                 = 12;
-      bottom-margin                   = 12;
       vertical-margin                 = 14;
+      bottom-margin                   = 14;
       vertical-margin-bottom          = 14;
 
       # topbar icons
@@ -130,6 +166,10 @@
       show-open-position-icon         = false;
     };
 
+    "org/gnome/shell/extensions/paperwm/keybindings" = {
+      take-window=[]; # Remove Super+T
+      live-alt-tab=["<Alt>Tab"] # Remove Super+Tab
+    };
 
   };
 }
