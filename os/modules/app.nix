@@ -4,10 +4,17 @@
   pkgs,
   inputs,
   ...
-}: {
+}: let
+  chrome-zh = pkgs.google-chrome.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
+    postFixup = (old.postFixup or "") + ''
+      wrapProgram "$out/bin/google-chrome-stable" --set LANG zh_CN.UTF-8
+    '';
+  });
+in {
   environment.systemPackages = with pkgs; [
     ghostty
-    google-chrome
+    chrome-zh
     xclip
   ];
 
