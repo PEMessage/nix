@@ -58,9 +58,10 @@
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
     gnomeExtensions.blur-my-shell
-    gnomeExtensions.dash-to-dock
+    # gnomeExtensions.dash-to-dock
     gnomeExtensions.dynamic-wallpaper-fetcher
     gnomeExtensions.rounded-window-corners
+    gnomeExtensions.paperwm
     papirus-icon-theme
   ];
 
@@ -81,9 +82,10 @@
         appindicator.extensionUuid
         kimpanel.extensionUuid
         blur-my-shell.extensionUuid
-        dash-to-dock.extensionUuid
+        # dash-to-dock.extensionUuid
         dynamic-wallpaper-fetcher.extensionUuid
         rounded-window-corners.extensionUuid
+        paperwm.extensionUuid
       ];
     };
 
@@ -102,9 +104,30 @@
       style-components = 3;
     };
 
-    "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
-      static-blur = false;
-      corner-radius = 28;
+    # "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
+    #   static-blur = false;
+    #   corner-radius = 28;
+    # };
+
+    # paperwm
+    # ==========================
+    "org/gnome/shell/extensions/paperwm" = {
+      # rounded-conner
+      selection-border-radius-bottom  = 20;
+      selection-border-radius-top     = 20;
+
+      # margin
+      selection-border-size           = 10;
+      window-gap                      = 20;
+      vertical-margin                 = 12;
+      bottom-margin                   = 12;
+      vertical-margin                 = 14;
+      vertical-margin-bottom          = 14;
+
+      # topbar icons
+      show-workspace-indicator        = false;
+      show-focus-mode-icon            = true;
+      show-open-position-icon         = false;
     };
 
 
