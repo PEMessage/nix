@@ -48,7 +48,10 @@
     yelp
   ];
 
-  imports = [ inputs.gnome-rounded-blur.nixosModules.default ];
+  imports = [
+    inputs.gnome-rounded-blur.nixosModules.default
+    ./gnome-fluent.nix
+  ];
 
 
   # AppIndicator tray icons (fcitx5 status icon), Kimpanel (fcitx5
@@ -131,12 +134,6 @@
         # rounded-window-corners.extensionUuid
         paperwm.extensionUuid
       ];
-    };
-
-    # Theme: dark mode + Papirus icons
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-      icon-theme = "Papirus-Dark";
     };
 
 
