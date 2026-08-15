@@ -40,6 +40,7 @@
     gnomeExtensions.appindicator
     gnomeExtensions.kimpanel
     gnomeExtensions.blur-my-shell
+    gnomeExtensions.dash-to-dock
     gnomeExtensions.dynamic-wallpaper-fetcher
     gnomeExtensions.rounded-window-corners
     papirus-icon-theme
@@ -62,6 +63,7 @@
         appindicator.extensionUuid
         kimpanel.extensionUuid
         blur-my-shell.extensionUuid
+        dash-to-dock.extensionUuid
         dynamic-wallpaper-fetcher.extensionUuid
         rounded-window-corners.extensionUuid
       ];
