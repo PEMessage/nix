@@ -53,4 +53,7 @@
       libxkbcommon
     ];
   };
+
+  # enable uinput for remote desktop
+  hardware.uinput.enable = true;
 }
