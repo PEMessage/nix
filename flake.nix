@@ -1,12 +1,21 @@
 {
   description = "NixOS / home-manager configuration";
   nixConfig = rec {
+    # Thanks https://github.com/RazYang/dotfiles/blob/443186a01817af0062ef331b628c1f2fd281d5c1/flake.nix
+    experimental-features = [
+      "flakes"
+      "nix-command"
+    ];
     extra-substituters = [
+      "https://mirror.sjtu.edu.cn/nix-channels/store"
+      "https://nix-community.cachix.org"
+
       "https://noctalia.cachix.org"
       "https://niri.cachix.org"
     ];
     extra-trusted-substituters = extra-substituters;
     extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
     ];
