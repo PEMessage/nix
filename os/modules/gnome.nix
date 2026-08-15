@@ -7,6 +7,21 @@
   };
   services.desktopManager.gnome.enable = true;
 
+  # Remote Desktop
+  # ==========================
+
+  # See: https://nixos.wiki/wiki/Remote_Desktop#GNOME
+  services.gnome.gnome-remote-desktop.enable = true;
+  # Ensure the service starts automatically at boot so the settings panel appears
+  systemd.services.gnome-remote-desktop = {
+    wantedBy = [ "graphical.target" ];
+  };
+  # Open the default RDP port (3389)
+  networking.firewall.allowedTCPPorts = [ 3389 ];
+
+  # Trim
+  # ==========================
+
   # Trim GNOME defaults: no games, and drop the core apps we don't use.
   # Kept: nautilus, gnome-console, gnome-text-editor, gnome-calculator,
   # gnome-control-center, seahorse, snapshot, loupe, gnome-system-monitor.
