@@ -79,6 +79,7 @@
 
     "org/gnome/desktop/wm/keybindings" = {
       close = [ "<Super>q" ];
+      minimize = []; # Remove Super+H
     };
 
     "org/gnome/shell/keybindings" = {
@@ -174,7 +175,7 @@
 
     "org/gnome/shell/extensions/paperwm/keybindings" = {
       take-window  = ["<Super>w"]; # Remove Super+T, using Super+w instead
-      live-alt-tab = ["<Alt>Tab"]; # Remove Super+Tab
+      live-alt-tab = ["<Alt>Tab" "<Super>Tab"];
     };
 
   };
