@@ -2,6 +2,11 @@
 # Drop-in alternative to ./gnome: swap the import in os/x.nix to use it.
 { config, lib, pkgs, inputs, ... }:
 {
+  imports = [
+    # Breeze (default) look; only one theme module at a time.
+    ./breeze.nix
+  ];
+
   # Display manager
   # ==========================
   services.displayManager.sddm = {
@@ -91,24 +96,14 @@
 
       kwin = {
         effects = {
-          blur.enable = true;
           dimInactive.enable = true;
           windowOpenClose.animation = "glide";
           desktopSwitching.animation = "fade";
         };
+        # No titlebar border on maximized windows.
         borderlessMaximizedWindows = true;
         nightLight.enable = true;
       };
-
-      # Floating, adaptive-transparency panel (blur kicks in over windows).
-      panels = [
-        {
-          location = "bottom";
-          alignment = "center";
-          floating = true;
-          opacity = "adaptive";
-        }
-      ];
 
       kscreenlocker = {
         autoLock = false;
