@@ -8,6 +8,7 @@
     gnomeExtensions.user-themes
     whitesur-gtk-theme
     whitesur-icon-theme
+    whitesur-cursors
   ];
 
   home-manager.users.${config.home.userName}.dconf.settings = {
@@ -20,6 +21,10 @@
       color-scheme = lib.mkForce "prefer-dark";
       gtk-theme = lib.mkForce "WhiteSur-Dark";
       icon-theme = lib.mkForce "WhiteSur-dark";
+      # Fix box cursor after switching from KDE: dconf was left pointing at
+      # "breeze_cursors", which is no longer installed.
+      cursor-theme = lib.mkForce "WhiteSur-cursors";
+      cursor-size = lib.mkForce 24;
     };
 
     "org/gnome/shell/extensions/user-theme" = {

@@ -43,6 +43,7 @@
         which
         python3
         wget
+        bc
 
         # build
         gcc
