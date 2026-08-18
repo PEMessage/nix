@@ -12,23 +12,35 @@
     '';
   });
 in {
+  disabledModules = [ "programs/clash-verge.nix" ];
+  imports = [
+    "${inputs.nixpkgs-unstable}/nixos/modules/programs/clash-verge.nix"
+    ./waynergy.nix
+  ];
+
   environment.systemPackages = with pkgs; [
     ghostty
     chrome-zh
     xclip
+    wl-clipboard
   ];
 
-  # Flatpak support (deskflow installed manually via flatpak).
-  services.flatpak.enable = true;
+  services.flatpak = {
+    enable = true;
+  };
+
+  # TLS client certificate is generated once and stored at
+  # ~/.config/waynergy/tls/cert (private key + cert PEM). To make it fully
+  # reproducible, copy it into this repo and set:
+  #   waynergy.tls.clientCertificate = ./secrets/waynergy-tls-cert;
+  waynergy = {
+    enable = config.programs.niri.enable;
+  };
 
   # Use the nixpkgs-unstable clash-verge module instead of the stable one:
   # stable's module sets ProtectSystem=strict without StateDirectory, so the
   # service cannot create /var/lib/clash-verge-service ("failed to create
   # desired state directory"). The unstable module ships StateDirectory.
-  imports = [
-    "${inputs.nixpkgs-unstable}/nixos/modules/programs/clash-verge.nix"
-  ];
-  disabledModules = [ "programs/clash-verge.nix" ];
   programs.clash-verge = {
     enable = true;
     # The group to grant access to clash-verge-rev’s service socket.
