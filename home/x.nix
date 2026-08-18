@@ -5,10 +5,7 @@
   lib,
   pkgs,
   ...
-}:
-{
-  imports = [
-    ./modules/niri-config.nix
-    ./modules/noctalia.nix
-  ];
+}: {
+  # niri / noctalia configuration now lives in os/modules/niri.nix
+  # and os/modules/noctalia.nix (which niri.nix imports).
 }
