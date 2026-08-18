@@ -15,6 +15,15 @@ in
     # systemd unit, matching the pattern noctalia used here.
   };
 
+  # The graphical session can't read gsettings (no schemas in the session's
+  # XDG_DATA_DIRS), so GTK/Qt fall back to the hardcoded default icon theme
+  # "Adwaita". Installing the theme makes that fallback resolve; without it,
+  # themed icons (e.g. the fcitx5 tray icon) render as black/pink checkered
+  # placeholders.
+  environment.systemPackages = [
+    pkgs.adwaita-icon-theme
+  ];
+
   # The NixOS module enables these services with mkDefault. On WSL hosts they
   # are useless (WSL2 does not expose power/geolocation hardware to Linux), so
   # disable them there; a plain assignment overrides the upstream mkDefault.
