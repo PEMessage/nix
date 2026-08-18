@@ -68,6 +68,8 @@
 
   # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop)
   outputs = inputs: {
+    nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
     nixosConfigurations.wsl = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
