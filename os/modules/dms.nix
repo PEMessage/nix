@@ -1,6 +1,12 @@
 # dms: DankMaterialShell — a complete Wayland desktop shell
 # (panel, launcher, notification center, clipboard, lock screen).
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   user = config.home.userName;
 in
@@ -11,8 +17,9 @@ in
 
   programs.dank-material-shell = {
     enable = true;
-    # Autostart is handled by niri's spawn-at-startup below instead of the
-    # systemd unit, matching the pattern noctalia used here.
+    # Autostart and keybinds are handled by the DMS niri home-manager module
+    # (programs.dank-material-shell.niri) below; the systemd unit stays off so
+    # only one instance is spawned.
   };
 
   # The graphical session can't read gsettings (no schemas in the session's
@@ -24,29 +31,47 @@ in
     pkgs.adwaita-icon-theme
   ];
 
-  # The NixOS module enables these services with mkDefault. On WSL hosts they
-  # are useless (WSL2 does not expose power/geolocation hardware to Linux), so
-  # disable them there; a plain assignment overrides the upstream mkDefault.
-  # `config.wsl.enable or false` also keeps hosts that never import the
-  # nixos-wsl module (e.g. pro830) from failing to evaluate.
-  services.power-profiles-daemon.enable = !(config.wsl.enable or false);
-  services.accounts-daemon.enable = !(config.wsl.enable or false);
-  services.geoclue2.enable = !(config.wsl.enable or false);
-
   home-manager.users.${user} =
     { ... }:
     {
-      programs.niri.settings = {
-        # Start the shell with niri.
-        spawn-at-startup = [
-          {
-            argv = [
-              "dms"
-              "run"
-            ];
-          }
-        ];
+      imports = [
+        inputs.dms.homeModules.dank-material-shell
+        inputs.dms.homeModules.niri
+      ];
 
+      programs.dank-material-shell = {
+        enable = true;
+        niri = {
+          # DMS preset keybinds (launcher, notifications, settings, lock,
+          # powermenu, clipboard, volume/brightness keys, ...).
+          enableKeybinds = true;
+          # Auto-start DMS with niri (dms run in spawn-at-startup).
+          enableSpawn = true;
+          includes = {
+            # The includes hack would overwrite our managed config.kdl entry
+            # point, so it stays off; the same dms/*.kdl files are included
+            # manually through niriConfig.lines below instead.
+            enable = false;
+          };
+        };
+      };
+
+      # Include the DMS-generated integration files (created with `dms setup`,
+      # e.g. `dms setup binds`) into the niri config entry point. `optional`
+      # means niri skips files that haven't been generated yet, so no error on
+      # a fresh install.
+      niriConfig.lines = [
+        "include optional=true \"dms/alttab.kdl\";"
+        "include optional=true \"dms/binds.kdl\";"
+        "include optional=true \"dms/colors.kdl\";"
+        "include optional=true \"dms/cursor.kdl\";"
+        "include optional=true \"dms/layout.kdl\";"
+        "include optional=true \"dms/outputs.kdl\";"
+        "include optional=true \"dms/windowrules.kdl\";"
+        "include optional=true \"dms/wpblur.kdl\";"
+      ];
+
+      programs.niri.settings = {
         # Let the DMS wallpaper render behind windows instead of as a layer
         # that fights with the backdrop. See
         # https://danklinux.com/docs/dankmaterialshell/compositors#layer-rules
@@ -60,28 +85,6 @@ in
             place-within-backdrop = true;
           }
         ];
-
-        # Niri binds that talk to DMS via its IPC.
-        binds = {
-          # Mod+D opens the DMS launcher.
-          "Mod+D" = {
-            hotkey-overlay = {
-              title = "Open DMS Launcher";
-            };
-            action.spawn = [ "dms" "ipc" "call" "spotlight" "toggle" ];
-          };
-          # Mod+Alt+L locks the screen via DMS.
-          "Mod+Alt+L" = {
-            hotkey-overlay = { title = "Lock the Screen"; };
-            action.spawn = [ "dms" "ipc" "call" "lock" "lock" ];
-          };
-
-          # Open the DMS clipboard panel.
-          "Mod+V" = {
-            hotkey-overlay = { title = "Open DMS Clipboard"; };
-            action.spawn = [ "dms" "ipc" "call" "clipboard" "toggle" ];
-          };
-        };
       };
     };
 }

@@ -1,5 +1,11 @@
 # noctalia: Wayland desktop shell panel (window switcher, launcher, clipboard).
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   user = config.home.userName;
 in
@@ -65,16 +71,80 @@ in
             hotkey-overlay = {
               title = "Open Noctalia Launcher";
             };
-            action.spawn = [ "noctalia" "msg" "panel-toggle" "launcher" ];
+            action.spawn = [
+              "noctalia"
+              "msg"
+              "panel-toggle"
+              "launcher"
+            ];
           };
           # Mod+Alt+L locks the screen via noctalia.
           "Mod+Alt+L" = {
-            hotkey-overlay = { title = "Lock the Screen"; };
-            action.spawn = [ "noctalia" "msg" "session" "lock" ];
+            hotkey-overlay = {
+              title = "Lock the Screen";
+            };
+            action.spawn = [
+              "noctalia"
+              "msg"
+              "session"
+              "lock"
+            ];
           };
 
           # Open the Noctalia clipboard panel.
-          "Mod+V".action.spawn = [ "noctalia" "msg" "panel-toggle" "clipboard" ];
+          "Mod+V".action.spawn = [
+            "noctalia"
+            "msg"
+            "panel-toggle"
+            "clipboard"
+          ];
+
+          # Consume one window from the right to the bottom of the focused column.
+          "Mod+Comma".action.consume-window-into-column = [ ];
+
+          # While maximize-column leaves gaps and borders around the window,
+          # maximize-window-to-edges doesn't: the window expands to the edges
+          # of the screen. This bind corresponds to normal window maximizing,
+          # e.g. by double-clicking on the titlebar.
+          "Mod+M".action.maximize-window-to-edges = [ ];
+
+          # Volume keys via wpctl.
+          "XF86AudioRaiseVolume" = {
+            allow-when-locked = true;
+            action.spawn-sh = [ "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0" ];
+          };
+          "XF86AudioLowerVolume" = {
+            allow-when-locked = true;
+            action.spawn-sh = [ "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-" ];
+          };
+          "XF86AudioMute" = {
+            allow-when-locked = true;
+            action.spawn-sh = [ "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" ];
+          };
+          "XF86AudioMicMute" = {
+            allow-when-locked = true;
+            action.spawn-sh = [ "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" ];
+          };
+
+          # Brightness key mappings for brightnessctl.
+          "XF86MonBrightnessUp" = {
+            allow-when-locked = true;
+            action.spawn = [
+              "brightnessctl"
+              "--class=backlight"
+              "set"
+              "+10%"
+            ];
+          };
+          "XF86MonBrightnessDown" = {
+            allow-when-locked = true;
+            action.spawn = [
+              "brightnessctl"
+              "--class=backlight"
+              "set"
+              "10%-"
+            ];
+          };
         };
       };
     };
