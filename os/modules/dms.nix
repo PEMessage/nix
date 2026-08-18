@@ -26,9 +26,16 @@ in
   # XDG_DATA_DIRS), so GTK/Qt fall back to the hardcoded default icon theme
   # "Adwaita". Installing the theme makes that fallback resolve; without it,
   # themed icons (e.g. the fcitx5 tray icon) render as black/pink checkered
-  # placeholders.
+  # placeholders. hicolor is the standard last-resort fallback; tela provides
+  # the icon set used on the desktop.
   environment.systemPackages = [
+    # As icons fallback
     pkgs.adwaita-icon-theme
+    pkgs.hicolor-icon-theme
+
+    pkgs.papirus-icon-theme
+    pkgs.inotify-tools # dms-plugin-registry wallpaperBing daemon dependency
+    # fcitx-menu-icon-fix
   ];
 
   home-manager.users.${user} =
