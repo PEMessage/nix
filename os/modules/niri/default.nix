@@ -12,6 +12,7 @@ in
 {
   imports = [
     inputs.niri.nixosModules.niri
+    # ./noctalia.nix
     ./dms.nix
   ];
 

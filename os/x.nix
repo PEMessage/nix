@@ -3,7 +3,7 @@
 { config, pkgs, options, ... }:
 {
   imports = [
-    ./modules/niri.nix
+    ./modules/niri
     # ./modules/gnome
     # ./modules/kde
     ./modules/ime.nix

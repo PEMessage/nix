@@ -6,6 +6,5 @@
   pkgs,
   ...
 }: {
-  # niri / dms configuration now lives in os/modules/niri.nix
-  # and os/modules/dms.nix (which niri.nix imports).
+  # niri / dms configuration now lives in os/modules/niri/.
 }
