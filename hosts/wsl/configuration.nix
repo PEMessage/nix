@@ -18,6 +18,7 @@
     # include NixOS-WSL modules
     # <nixos-wsl/modules>
     inputs.nixos-wsl.nixosModules.wsl
+    ./misc.nix
   ];
 
   wsl.enable = true;
