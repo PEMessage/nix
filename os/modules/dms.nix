@@ -45,6 +45,7 @@ in
         inputs.dms.homeModules.dank-material-shell
         inputs.dms.homeModules.niri
         inputs.dms-plugin-registry.homeModules.default
+        inputs.dsearch.homeModules.default
       ];
 
       programs.dank-material-shell = {
@@ -76,6 +77,13 @@ in
         # auto-enabled; set it to generate plugin_settings.json with the
         # enabled plugins.
         managePluginSettings = true;
+      };
+
+      # dsearch: indexed filesystem search daemon. Config is omitted so the
+      # default (~/ indexed, max_depth 6, built-in exclude list) is generated
+      # at ~/.config/danksearch/config.toml on first run.
+      programs.dsearch = {
+        enable = true;
       };
 
       # Include the DMS-generated integration files (created with `dms setup`,

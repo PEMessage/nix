@@ -58,6 +58,26 @@
         "type": "github"
       }
     },
+    "dsearch": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786198506,
+        "narHash": "sha256-u4tdLMzKCV2R0wn4eFtk4LKH0RmzzCkxeYqCYs/P3eg=",
+        "owner": "AvengeMedia",
+        "repo": "danksearch",
+        "rev": "632c2909bb1bb534b574c22c1347de0e6521e58a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "danksearch",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -306,6 +326,7 @@
       "inputs": {
         "dms": "dms",
         "dms-plugin-registry": "dms-plugin-registry",
+        "dsearch": "dsearch",
         "gnome-rounded-blur": "gnome-rounded-blur",
         "home-manager": "home-manager",
         "niri": "niri",
