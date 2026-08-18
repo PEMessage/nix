@@ -3,8 +3,8 @@
 { config, pkgs, options, ... }:
 {
   imports = [
-    # ./modules/niri.nix
-    ./modules/gnome
+    ./modules/niri.nix
+    # ./modules/gnome
     # ./modules/kde
     ./modules/ime.nix
     ./modules/app.nix
@@ -52,6 +52,7 @@
 
       # keyboard
       libxkbcommon
+
     ];
   };
 
