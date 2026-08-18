@@ -38,6 +38,26 @@
         "type": "github"
       }
     },
+    "dms-plugin-registry": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787032065,
+        "narHash": "sha256-4cRupXquFsxSKyLHhK+HPtpSkv3s9S2iaJs6NbmIaIk=",
+        "owner": "AvengeMedia",
+        "repo": "dms-plugin-registry",
+        "rev": "70a3228c2726dee0e7fbfbee71a55da5343fe438",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "dms-plugin-registry",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -285,6 +305,7 @@
     "root": {
       "inputs": {
         "dms": "dms",
+        "dms-plugin-registry": "dms-plugin-registry",
         "gnome-rounded-blur": "gnome-rounded-blur",
         "home-manager": "home-manager",
         "niri": "niri",

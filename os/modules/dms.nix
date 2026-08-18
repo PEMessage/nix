@@ -37,6 +37,7 @@ in
       imports = [
         inputs.dms.homeModules.dank-material-shell
         inputs.dms.homeModules.niri
+        inputs.dms-plugin-registry.homeModules.default
       ];
 
       programs.dank-material-shell = {
@@ -54,6 +55,20 @@ in
             enable = false;
           };
         };
+
+        # Plugins by their registry IDs.
+        plugins = {
+          # Wallpaper of the Day: downloads the daily Bing image and sets it
+          # as the desktop background.
+          wallpaperBing.enable = true;
+          # Wallpaper of the Day (Widget): bar widget for the above daemon.
+          wallpaperBingWidget.enable = true;
+        };
+
+        # The plugins have no settings, so managePluginSettings wouldn't be
+        # auto-enabled; set it to generate plugin_settings.json with the
+        # enabled plugins.
+        managePluginSettings = true;
       };
 
       # Include the DMS-generated integration files (created with `dms setup`,
