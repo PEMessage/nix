@@ -8,9 +8,12 @@
 {
   imports = [
     ./modules/home-manager.nix
+    ./modules/herdr
   ];
 
   config = {
+
+    herdr.enable = true;
 
     nix.settings.experimental-features = [
       "nix-command"
@@ -63,7 +66,6 @@
         fzf
         ripgrep
         tealdeer
-        unstable.herdr
       ]
       ++ [
         # tmux: latest from nixpkgs-unstable
