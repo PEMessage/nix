@@ -9,7 +9,6 @@
 }:
 let
   cfg = config.waynergy;
-  user = config.home.userName;
 
   # Reduce UINPUT_KEY_MAX from 256 to 247 to exclude BTN_0 (evdev 256) from
   # the uinput keyboard device's key bit field.  Without this, libinput
@@ -106,10 +105,11 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ waynergy-patched ];
 
-    home-manager.users.${user} =
-      { ... }:
-      {
-        xdg.configFile."waynergy/config.ini" = lib.mkForce {
+    home-manager.sharedModules = [
+      (
+        { ... }:
+        {
+          xdg.configFile."waynergy/config.ini" = lib.mkForce {
           force = true;
           text = ''
           host=${cfg.host}
@@ -181,6 +181,8 @@ in
           };
           Install.WantedBy = [ "graphical-session.target" ];
         };
-      };
-    };
+      }
+      )
+    ];
+  };
 }

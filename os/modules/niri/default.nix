@@ -7,7 +7,8 @@
   ...
 }:
 let
-  user = config.home.userName;
+  # Exactly one home-manager user per host; use it as the greetd login user.
+  userName = builtins.head (builtins.attrNames config.home-manager.users);
 in
 {
   imports = [
@@ -27,7 +28,7 @@ in
     settings = {
       default_session = {
         command = "${pkgs.niri}/bin/niri-session";
-        user = user;
+        user = userName;
       };
     };
   };
@@ -40,9 +41,10 @@ in
     swaylock
   ];
 
-  home-manager.users.${user} =
-    { config, lib, ... }:
-    {
+  home-manager.sharedModules = [
+    (
+      { config, lib, ... }:
+      {
       # Lines that other modules (e.g. dms.nix) can contribute to the niri
       # config entry point; they land between nix.kdl and local.kdl so that
       # unmanaged local overrides still win.
@@ -195,5 +197,7 @@ in
           };
         };
       };
-    };
+    }
+      )
+    ];
 }

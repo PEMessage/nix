@@ -1,6 +1,10 @@
 # kde: KDE Plasma 6 desktop (SDDM login + KWin Wayland session).
 # Drop-in alternative to ./gnome: swap the import in os/x.nix to use it.
 { config, lib, pkgs, inputs, ... }:
+let
+  # Exactly one home-manager user per host.
+  userName = builtins.head (builtins.attrNames config.home-manager.users);
+in
 {
   imports = [
     # Breeze (default) look; only one theme module at a time.
@@ -16,7 +20,7 @@
   };
   services.displayManager.autoLogin = {
     enable = true;
-    user = config.home.userName;
+    user = userName;
   };
   services.desktopManager.plasma6.enable = true;
 
@@ -84,12 +88,15 @@
 
   # Declarative Plasma configuration (plasma-manager)
   # ==========================
-  home-manager.users.${config.home.userName} = {
-    imports = [
-      inputs.plasma-manager.homeModules.plasma-manager
-    ];
+  home-manager.sharedModules = [
+    (
+      { inputs, ... }:
+      {
+        imports = [
+          inputs.plasma-manager.homeModules.plasma-manager
+        ];
 
-    programs.plasma = {
+        programs.plasma = {
       enable = true;
       # Reset everything not set here to Plasma defaults on login.
       overrideConfig = true;
@@ -110,5 +117,7 @@
         lockOnResume = false;
       };
     };
-  };
+  }
+      )
+    ];
 }

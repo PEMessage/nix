@@ -43,19 +43,26 @@
 
   # Rime's default.custom.yaml lives in the user data dir
   # (~/.local/share/fcitx5/rime), so manage it via home-manager. home-manager's
-  # NixOS module is already imported by os/modules/home-manager.nix, so this
+  # NixOS module is already imported by os/modules/home.nix, so this
   # can stay in the same file.
-  home-manager.users.${config.home.userName}.home.file.".local/share/fcitx5/rime/default.custom.yaml" = {
-    text = ''
-      patch:
-        __include: rime_ice_suggestion:/
-        schema_list:
-          - schema: rime_ice
-          - schema: double_pinyin_mspy
-        menu:
-          page_size: 8
-    '';
-  };
+  home-manager.sharedModules = [
+    (
+      { ... }:
+      {
+        home.file.".local/share/fcitx5/rime/default.custom.yaml" = {
+          text = ''
+            patch:
+              __include: rime_ice_suggestion:/
+              schema_list:
+                - schema: rime_ice
+                - schema: double_pinyin_mspy
+              menu:
+                page_size: 8
+          '';
+        };
+      }
+    )
+  ];
 
   # On GNOME the XDG autostart file ships with the package
   # (etc/xdg/autostart/org.fcitx.Fcitx5.desktop), so no explicit service is

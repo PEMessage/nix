@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   # Fluent (Windows 11 style) GTK/Shell theme + Fluent icons.
   environment.systemPackages = with pkgs; [
@@ -7,7 +7,11 @@
     fluent-icon-theme
   ];
 
-  home-manager.users.${config.home.userName}.dconf.settings = {
+  home-manager.sharedModules = [
+    (
+      { ... }:
+      {
+        dconf.settings = {
     "org/gnome/shell" = {
       enabled-extensions = lib.mkBefore [ pkgs.gnomeExtensions.user-themes.extensionUuid ];
     };
@@ -21,5 +25,7 @@
     "org/gnome/shell/extensions/user-theme" = {
       name = "Fluent-Dark";
     };
-  };
+  }
+      )
+    ];
 }

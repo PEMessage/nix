@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   # WhiteSur (macOS Big Sur style) GTK/Shell theme + WhiteSur icons.
   # macOS-style window buttons (close left) are handled by GNOME itself:
@@ -11,7 +11,11 @@
     whitesur-cursors
   ];
 
-  home-manager.users.${config.home.userName}.dconf.settings = {
+  home-manager.sharedModules = [
+    (
+      { ... }:
+      {
+        dconf.settings = {
     "org/gnome/shell" = {
       enabled-extensions = lib.mkBefore [ pkgs.gnomeExtensions.user-themes.extensionUuid ];
     };
@@ -30,5 +34,7 @@
     "org/gnome/shell/extensions/user-theme" = {
       name = lib.mkForce "WhiteSur-Dark";
     };
-  };
+  }
+      )
+    ];
 }

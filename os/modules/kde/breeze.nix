@@ -1,9 +1,13 @@
 # breeze: default Breeze look (blur strength, panel/dock layout).
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  home-manager.users.${config.home.userName}.programs.plasma = {
-    # Dark theme (global theme, plasma style and color scheme).
-    workspace = {
+  home-manager.sharedModules = [
+    (
+      { ... }:
+      {
+        programs.plasma = {
+          # Dark theme (global theme, plasma style and color scheme).
+          workspace = {
       lookAndFeel = "org.kde.breezedark.desktop";
       theme = "breeze-dark";
       colorScheme = "BreezeDark";
@@ -49,5 +53,7 @@
         ];
       }
     ];
-  };
+  }
+      )
+    ];
 }

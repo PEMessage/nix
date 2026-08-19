@@ -7,9 +7,6 @@
   inputs,
   ...
 }:
-let
-  user = config.home.userName;
-in
 {
   imports = [
     inputs.dms.nixosModules.default
@@ -38,15 +35,16 @@ in
     # fcitx-menu-icon-fix
   ];
 
-  home-manager.users.${user} =
-    { ... }:
-    {
-      imports = [
-        inputs.dms.homeModules.dank-material-shell
-        inputs.dms.homeModules.niri
-        inputs.dms-plugin-registry.homeModules.default
-        inputs.dsearch.homeModules.default
-      ];
+  home-manager.sharedModules = [
+    (
+      { ... }:
+      {
+        imports = [
+          inputs.dms.homeModules.dank-material-shell
+          inputs.dms.homeModules.niri
+          inputs.dms-plugin-registry.homeModules.default
+          inputs.dsearch.homeModules.default
+        ];
 
       programs.dank-material-shell = {
         enable = true;
@@ -116,5 +114,7 @@ in
           }
         ];
       };
-    };
+    }
+      )
+    ];
 }

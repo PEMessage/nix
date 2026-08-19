@@ -1,9 +1,13 @@
 { config, lib, pkgs, inputs, ... }:
+let
+  # Exactly one home-manager user per host.
+  userName = builtins.head (builtins.attrNames config.home-manager.users);
+in
 {
   services.displayManager.gdm.enable = true;
   services.displayManager.autoLogin = {
     enable = true;
-    user = config.home.userName;
+    user = userName;
   };
   services.desktopManager.gnome.enable = true;
 
@@ -72,7 +76,11 @@
 
   # Enable the extensions declaratively (docs: install via systemPackages,
   # enable via dconf, since NixOS has no gnome.extensions option anymore).
-  home-manager.users.${config.home.userName}.dconf.settings = {
+  home-manager.sharedModules = [
+    (
+      { ... }:
+      {
+        dconf.settings = {
     # Never auto-lock the screen
     "org/gnome/desktop/screensaver" = {
       lock-enabled = false;
@@ -177,5 +185,7 @@
       live-alt-tab = ["<Alt>Tab" "<Super>Tab"];
     };
 
-  };
+  }
+      )
+    ];
 }

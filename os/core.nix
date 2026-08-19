@@ -7,7 +7,6 @@
 }:
 {
   imports = [
-    ./modules/home-manager.nix
     ./modules/herdr
   ];
 
@@ -88,6 +87,26 @@
     programs.zsh.enable = true;
     environment.shells = [ pkgs.zsh ];
     users.defaultUserShell = pkgs.zsh;
+
+    # home-manager: inject this feature's home config into every home user.
+    home-manager.sharedModules = [
+      (
+        { ... }:
+        {
+          home.stateVersion = "26.05";
+
+          home.file.".profile".text = ''
+            # if running bash
+            if [ -n "$BASH_VERSION" ]; then
+              # include .bashrc if it exists
+              if [ -f "$HOME/.bashrc" ]; then
+              . "$HOME/.bashrc"
+              fi
+            fi
+          '';
+        }
+      )
+    ];
 
   };
 }
