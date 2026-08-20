@@ -37,6 +37,12 @@ in {
     enable = config.programs.niri.enable;
   };
 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+  };
+
   # Use the nixpkgs-unstable clash-verge module instead of the stable one:
   # stable's module sets ProtectSystem=strict without StateDirectory, so the
   # service cannot create /var/lib/clash-verge-service ("failed to create

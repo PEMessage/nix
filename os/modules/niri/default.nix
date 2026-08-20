@@ -36,9 +36,13 @@ in
   # No display manager needed, greetd takes over the login screen.
   services.displayManager.enable = false;
 
+  # gnome vfs
+  services.gvfs.enable = true;
+
   environment.systemPackages = with pkgs; [
     fuzzel
     swaylock
+    nautilus
   ];
 
   home-manager.sharedModules = [
@@ -65,6 +69,11 @@ in
         xdg.configFile.niri-config.target = lib.mkForce "niri/nix.kdl";
 
         programs.niri.settings = {
+          xwayland-satellite = {
+            enable = true;
+            path = lib.getExe inputs.niri.packages.${pkgs.system}.xwayland-satellite-unstable;
+          };
+
           window-rules = [
             {
               geometry-corner-radius = {
