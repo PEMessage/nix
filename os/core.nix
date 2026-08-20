@@ -52,6 +52,9 @@
         autoconf
         automake
 
+        # system
+        kbd
+
         # zip
         _7zz
 
@@ -60,6 +63,7 @@
         fzf
         ripgrep
         tealdeer
+        unstable.herdr
       ]
       ++ [
         # tmux: latest from nixpkgs-unstable
