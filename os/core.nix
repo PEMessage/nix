@@ -88,6 +88,11 @@
     environment.shells = [ pkgs.zsh ];
     users.defaultUserShell = pkgs.zsh;
 
+    # appimage support
+    # ===================================
+    programs.appimage.enable = true;
+    programs.appimage.binfmt = true;
+
     # home-manager: inject this feature's home config into every home user.
     home-manager.sharedModules = [
       (
