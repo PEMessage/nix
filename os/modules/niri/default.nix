@@ -98,6 +98,12 @@ in
               repeat = false;
               action.toggle-overview = [ ];
             };
+            "Mod+B" = {
+              hotkey-overlay = {
+                title = "Open Chrome";
+              };
+              action.spawn = [ "google-chrome-stable" ];
+            };
             "Mod+Q" = {
               repeat = false;
               action.close-window = [ ];
