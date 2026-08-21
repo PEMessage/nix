@@ -10,6 +10,7 @@
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
       cascadia-code
+      (pkgs.callPackage ./packages/cascadia-next-sc.nix { })
     ];
 
     fontconfig = {
