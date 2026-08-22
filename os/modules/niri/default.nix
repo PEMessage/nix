@@ -166,9 +166,18 @@ in
             # Mouse
             "Mod+WheelScrollDown" = {
               cooldown-ms = 150;
-              action.focus-workspace-down = [ ];
+              action.focus-column-right = [ ];
             };
             "Mod+WheelScrollUp" = {
+              cooldown-ms = 150;
+              action.focus-column-left = [ ];
+            };
+
+            "Mod+Shift+WheelScrollDown" = {
+              cooldown-ms = 150;
+              action.focus-workspace-down= [ ];
+            };
+            "Mod+Shift+WheelScrollUp" = {
               cooldown-ms = 150;
               action.focus-workspace-up = [ ];
             };
