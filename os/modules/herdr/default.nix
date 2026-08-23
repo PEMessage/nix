@@ -6,10 +6,6 @@
 # with bold font weight instead of becoming bright. Emitting classic 16-color
 # SGR for indices 0-15 lets the host terminal apply its own bold-is-bright policy.
 # See refs/herdr-bold-bright-issue.md.
-#
-# Uses herdr 0.8.2 (nixpkgs-unstable still ships 0.8.0, so version, src, and the
-# precomputed cargoDeps/zigDeps are overridden below; the rest of the upstream
-# recipe is inherited from pkgs.unstable.herdr).
 {
   config,
   lib,
@@ -17,47 +13,9 @@
   ...
 }:
 let
-  herdr-src = pkgs.unstable.fetchFromGitHub {
-    owner = "herdrdev";
-    repo = "herdr";
-    tag = "v0.8.2";
-    hash = "sha256-sEGIN3dLZasaHob3EHscWBCIQHflMQVchYmzgsETDk4=";
-  };
-
-  # buildRustPackage precomputes the vendored deps (cargoDeps) and bakes the
-  # zigDeps path into the build script at finalAttrs-fixpoint time, so bumping
-  # cargoHash/zigDeps.hash alone via overrideAttrs has no effect. Instead we
-  # rebuild those precomputed values for 0.8.2 and re-point postConfigure at the
-  # new zigDeps. All other recipe attrs (nativeBuildInputs, postInstall, meta,
-  # doCheck, ...) are inherited from the original package.
-  herdr-cargoDeps = pkgs.unstable.rustPlatform.fetchCargoVendor {
-    src = herdr-src;
-    name = "herdr-0.8.2-vendor";
-    hash = "sha256-4VThqPwYYEsGvaOKjBeL6XAC5bnNWB6oUMWP/uXc/UQ=";
-  };
-
-  herdr-zigDeps = pkgs.unstable.zig_0_15.fetchDeps {
-    pname = "herdr";
-    version = "0.8.2";
-    src = "${herdr-src}/vendor/libghostty-vt";
-    fetchAll = true;
-    hash = "sha256-PnM+hZIlLyQwK8vJgd/Bhjt1lNIz06T8FahwliRmMrY=";
-  };
-
   # herdr-patched is defined at top-level scope so it can be shared between the
   # package list and any future service config (mirrors waynergy.nix's pattern).
   herdr-patched = pkgs.unstable.herdr.overrideAttrs (old: {
-    version = "0.8.2";
-    src = herdr-src;
-    cargoDeps = herdr-cargoDeps;
-    zigDeps = herdr-zigDeps;
-
-    postConfigure = ''
-      export ZIG_GLOBAL_CACHE_DIR=$(mktemp -d)
-      cp -rL ${herdr-zigDeps} "$ZIG_GLOBAL_CACHE_DIR/p"
-      chmod -R u+w "$ZIG_GLOBAL_CACHE_DIR/p"
-    '';
-
     postPatch = (old.postPatch or "") + ''
       substituteInPlace src/protocol/render_ansi.rs \
         --replace-fail \
