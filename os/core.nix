@@ -59,6 +59,7 @@
 
         # zip
         _7zz
+        unzip
 
         # modern unix
         neovim
