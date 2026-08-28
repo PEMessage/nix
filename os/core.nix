@@ -8,6 +8,7 @@
 {
   imports = [
     ./modules/herdr
+    ./modules/script
   ];
 
   config = {

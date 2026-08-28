@@ -13,6 +13,9 @@
 
     # uv
     uv
+
+    # chezmoi + one-command init helper
+    chezmoi
   ];
 
   # home-manager: inject this feature's home config into every home user.
@@ -24,18 +27,15 @@
           gh
           nixfmt
           tree-sitter
-          chezmoi
         ];
+
+        # one-command convenience scripts on PATH
+        script = {
+          pe-chezmoi-init = ./scripts/pe-chezmoi-init;
+        };
 
         home.file.".peprofile".text = ''
           "$(command -v bun)" > /dev/null && export PATH="$HOME/.bun/bin:$PATH"
-        '';
-
-        home.activation.runChezmoi = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          if [ ! -d "$HOME/.local/share/chezmoi" ] ; then
-              echo "Initializing chezmoi dotfiles..." ;
-          ${pkgs.chezmoi}/bin/chezmoi init --branch linux-v2 --apply pemessage --depth 1 ;
-          fi
         '';
       }
     )

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -d "$HOME/.local/share/chezmoi" ]; then
+  echo "chezmoi already initialized at $HOME/.local/share/chezmoi"
+  exit 0
+fi
+
+echo "Initializing chezmoi dotfiles..."
+chezmoi init --branch linux-v2 --apply pemessage --depth 1
