@@ -57,6 +57,7 @@
 
         # system
         kbd
+        openssl
 
         # zip
         _7zz

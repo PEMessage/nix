@@ -103,12 +103,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ waynergy-patched ];
+    environment.systemPackages = [
+      waynergy-patched
+    ];
 
     home-manager.sharedModules = [
       (
         { ... }:
         {
+          # one-command waynergy TLS client certificate generation
+          script.waynergy-tls-init = ./waynergy-tls-init;
+
           xdg.configFile."waynergy/config.ini" = lib.mkForce {
           force = true;
           text = ''

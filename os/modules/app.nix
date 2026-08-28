@@ -15,7 +15,7 @@ in {
   disabledModules = [ "programs/clash-verge.nix" ];
   imports = [
     "${inputs.nixpkgs-unstable}/nixos/modules/programs/clash-verge.nix"
-    ./waynergy.nix
+    ./waynergy
   ];
 
   environment.systemPackages = with pkgs; [
