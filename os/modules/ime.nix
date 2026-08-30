@@ -66,8 +66,8 @@
             patch:
               __include: rime_ice_suggestion:/
               schema_list:
-                - schema: rime_ice
                 - schema: double_pinyin_mspy
+                - schema: rime_ice
               menu:
                 page_size: 8
           '';
