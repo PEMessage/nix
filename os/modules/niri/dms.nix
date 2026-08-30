@@ -1,11 +1,11 @@
 # dms: DankMaterialShell — a complete Wayland desktop shell
 # (panel, launcher, notification center, clipboard, lock screen).
 {
-  config,
-  lib,
-  pkgs,
-  inputs,
-  ...
+config,
+lib,
+pkgs,
+inputs,
+...
 }:
 {
   imports = [
@@ -35,16 +35,15 @@
     # fcitx-menu-icon-fix
   ];
 
-  home-manager.sharedModules = [
-    (
-      { ... }:
-      {
-        imports = [
-          inputs.dms.homeModules.dank-material-shell
-          inputs.dms.homeModules.niri
-          inputs.dms-plugin-registry.homeModules.default
-          inputs.dsearch.homeModules.default
-        ];
+  home-manager.sharedModules = [ (
+    { ... }:
+    {
+      imports = [
+        inputs.dms.homeModules.dank-material-shell
+        inputs.dms.homeModules.niri
+        inputs.dms-plugin-registry.homeModules.default
+        inputs.dsearch.homeModules.default
+      ];
 
       programs.dank-material-shell = {
         enable = true;
@@ -75,6 +74,19 @@
         # auto-enabled; set it to generate plugin_settings.json with the
         # enabled plugins.
         managePluginSettings = true;
+        settings = {
+          configVersion = 16;
+
+          theme = "dark";
+          dynamicTheming = true;
+          currentThemeName = "dynamic";
+          currentThemeCategory = "dynamic";
+
+          # Blur
+          blurEnabled= true;
+          blurWallpaperOnOverview = true;
+          popupTransparency = 0.8;
+        };
       };
 
       # dsearch: indexed filesystem search daemon. Config is omitted so the
@@ -115,6 +127,5 @@
         ];
       };
     }
-      )
-    ];
+  ) ];
 }
