@@ -85,7 +85,9 @@ inputs,
           # Blur
           blurEnabled= true;
           blurWallpaperOnOverview = true;
-          popupTransparency = 0.8;
+          popupTransparency = 0.65;
+          foregroundLayerTransparency = 0.8;
+          blurLayerOutlineOpacity = 0.2;
         };
       };
 
