@@ -78,6 +78,38 @@
         "type": "github"
       }
     },
+    "fcitx5-ori-theme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1721062590,
+        "narHash": "sha256-46O/wCRphjVkYCbr29QqyiGBG27u3UG2DnrInZSQkIA=",
+        "owner": "Reverier-Xu",
+        "repo": "Ori-fcitx5",
+        "rev": "d2cf5df38f11e4e14dcf9436af5b9f8fa0087c55",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Reverier-Xu",
+        "repo": "Ori-fcitx5",
+        "type": "github"
+      }
+    },
+    "fcitx5-themes-candlelight": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783315211,
+        "narHash": "sha256-YQ/2sveC57vQ36BjgnvPzObSAiAYmg1zK/TmEVqSvhY=",
+        "owner": "thep0y",
+        "repo": "fcitx5-themes-candlelight",
+        "rev": "60aeaddfb3ecdb6a132e8da7569a6c442e6bb217",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thep0y",
+        "repo": "fcitx5-themes-candlelight",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -327,6 +359,8 @@
         "dms": "dms",
         "dms-plugin-registry": "dms-plugin-registry",
         "dsearch": "dsearch",
+        "fcitx5-ori-theme": "fcitx5-ori-theme",
+        "fcitx5-themes-candlelight": "fcitx5-themes-candlelight",
         "gnome-rounded-blur": "gnome-rounded-blur",
         "home-manager": "home-manager",
         "niri": "niri",

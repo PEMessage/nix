@@ -64,6 +64,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    fcitx5-themes-candlelight = {
+      url = "github:thep0y/fcitx5-themes-candlelight";
+      flake = false;
+    };
+
+    fcitx5-ori-theme = {
+      url = "github:Reverier-Xu/Ori-fcitx5";
+      flake = false;
+    };
+
   };
 
   # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop)

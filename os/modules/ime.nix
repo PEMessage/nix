@@ -1,5 +1,17 @@
 # ime: Chinese input method (Fcitx 5) for the Wayland desktop.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
+
+let
+  # macOS Sonoma Dark theme from the non-flake fcitx5-themes-candlelight repo.
+  candlelight = pkgs.linkFarm "fcitx5-themes-candlelight" {
+    "share/fcitx5/themes/macOS-dark" = "${inputs.fcitx5-themes-candlelight}/macOS-dark";
+  };
+  # Ori theme from the non-flake Ori-fcitx5 repo.
+  ori-theme = pkgs.linkFarm "fcitx5-ori-theme" {
+    "share/fcitx5/themes/OriDark" = "${inputs.fcitx5-ori-theme}/OriDark";
+    "share/fcitx5/themes/OriLight" = "${inputs.fcitx5-ori-theme}/OriLight";
+  };
+in
 {
   i18n.inputMethod = {
     type = "fcitx5";
@@ -16,6 +28,8 @@
       addons = with pkgs; [
         qt6Packages.fcitx5-chinese-addons
         fcitx5-fluent
+        candlelight
+        ori-theme
         (fcitx5-rime.override {
          rimeDataPkgs = [
          pkgs.rime-ice
@@ -33,6 +47,11 @@
           };
           "Groups/0/Items/0".Name = "keyboard-us";
           "Groups/0/Items/1".Name = "rime";
+        };
+        addons.classicui.globalSection = {
+          "Vertical Candidate List" = false;
+          # "Theme" = "macOS-dark";
+          "Theme" = "OriDark";
         };
       };
     };
