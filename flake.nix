@@ -107,5 +107,22 @@
         ({ home-manager.users.pem = { imports = [ ]; }; })
       ];
     };
+
+    nixosConfigurations.pro830v2 = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/pro830/configuration.nix
+        ./os/modules/home.nix
+        ./os/core.nix
+        ./os/dev.nix
+        ./os/gui.nix
+        ./os/x.nix
+        ({lib, ...}: {
+         home-manager.users.pem = { imports = [ ]; };
+         networking.hostName = lib.mkForce "pro830v2";
+         })
+      ];
+    };
   };
 }
