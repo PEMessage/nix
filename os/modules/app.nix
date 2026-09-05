@@ -36,6 +36,10 @@ in {
   waynergy = {
     enable = config.programs.niri.enable;
   };
+  programs.wayvnc.enable = true;
+  networking.firewall.allowedTCPPorts = [
+    5900
+  ];
 
   programs.steam = {
     enable = true;
