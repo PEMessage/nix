@@ -25,6 +25,9 @@
       options = "--delete-older-than 21d";
     };
     nix.optimise.automatic = true;
+    # See: https://nixos-and-flakes.thiscute.world/zh/nix-store/add-binary-cache-servers
+    nix.settings.trusted-users = [ "root" "pem" ];
+
     nixpkgs.config.allowUnfree = true;
 
     # Expose nixpkgs-unstable as pkgs.unstable everywhere (NixOS + home-manager).
