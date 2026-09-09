@@ -44,6 +44,10 @@
     environment.systemPackages =
       with pkgs;
       [
+        #kernel
+        kmod
+
+        # utils
         git
         vim
         which
