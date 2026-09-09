@@ -7,13 +7,13 @@
 }:
 {
   imports = [
-    ./modules/herdr
+    # ./modules/herdr
     ./modules/script
   ];
 
   config = {
 
-    herdr.enable = true;
+    # herdr.enable = true;
 
     nix.settings.experimental-features = [
       "nix-command"
