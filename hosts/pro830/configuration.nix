@@ -78,7 +78,18 @@
   users.users.pem = {
     isNormalUser = true;
     group = "pem";   # nixos-install prompt this !
-    extraGroups = [ "wheel" "video" "users" "uinput" ]; # Enable 'sudo' for the user, backlight for brightnessctl.
+    extraGroups = [
+      # Enable 'sudo' for the user, backlight for brightnessctl.
+      "wheel"
+      "video"
+      "users"
+
+      # Enable uinput for waynergy
+      "uinput"
+
+      # Enable for /dev/ttyUSB0 access
+      "dialout"
+    ];
     packages = with pkgs; [
       tree
     ];
