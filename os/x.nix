@@ -1,6 +1,6 @@
 # x: desktop (X11 / Wayland) system configuration.
 # Enabled on real desktop hosts, not on WSL.
-{ config, pkgs, options, ... }:
+{ config, pkgs, options, inputs, ... }:
 {
   imports = [
     ./modules/niri
@@ -8,6 +8,7 @@
     # ./modules/kde
     ./modules/ime.nix
     ./modules/app.nix
+    inputs.nix-index-database.nixosModules.default
   ];
 
   # Enable the X11 windowing system.
@@ -34,6 +35,8 @@
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+
+  programs.nix-index-database.enable = true;
 
   programs.nix-ld = {
     libraries = with pkgs; [

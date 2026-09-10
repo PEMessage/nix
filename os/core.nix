@@ -105,6 +105,7 @@
         { ... }:
         {
           home.stateVersion = "26.05";
+          xdg.enable = true;
 
           home.file.".profile".text = ''
             # if running bash
