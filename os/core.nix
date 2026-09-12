@@ -82,6 +82,20 @@
       ];
     environment.localBinInPath = true;
 
+    # uv's openssl need CA file at /etc/ssl/cert.pem or /ets/ssl/certs
+    # NixOS provide following:
+    #  - /etc/ssl/certs/ca-certificates.crt ← Debian/Arch/Gentoo
+    #  - /etc/ssl/certs/ca-bundle.crt ← Old NixOS
+    #  - /etc/pki/tls/certs/ca-bundle.crt ← CentOS/Fedora
+    # NixOS intentionally ships only a CA bundle (CAfile), not a c_rehash
+    # directory (CApath): https://github.com/NixOS/nixpkgs/pull/12748
+
+    # Source: https://discourse.nixos.org/t/fix-ssl-sslcertverificationerror-with-uvs-standalone-python/71138
+    # source uses security.pki.caBundle, the read-only option from
+    # nixpkgs nixos/modules/security/ca.nix (the final CA bundle), so custom
+    # certs from security.pki.* are included automatically.
+    environment.etc."ssl/cert.pem".source = config.security.pki.caBundle;
+
 
     #Error during "tree-sitter build": Could not start dynamically linked executable: tree-sitter
     #NixOS cannot run dynamically linked executables intended for generic
