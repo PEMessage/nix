@@ -1,14 +1,23 @@
 # x: desktop (X11 / Wayland) system configuration.
 # Enabled on real desktop hosts, not on WSL.
-{ config, pkgs, options, inputs, ... }:
+{ config, lib, pkgs, options, inputs, ... }:
 {
   imports = [
     ./modules/niri
     # ./modules/gnome
     # ./modules/kde
-    ./modules/ime.nix
     ./modules/app.nix
     inputs.nix-index-database.nixosModules.default
+
+    # WSLg already provides the input method path, and Fcitx5's clipboard/X11
+    # selection traffic is a known trigger for WSLg's weston clipboard crash
+    # (microsoft/wslg#1407), so drop ime.nix on WSL hosts. A plain
+    # `lib.optional (config.wsl.enable or false) ...` in `imports` is not
+    # allowed (config is not available there -> infinite recursion), so the
+    # module is applied here and gated with mkIf instead.
+    (lib.mkIf (!(config.wsl.enable or false)) (
+      import ./modules/ime.nix { inherit config lib pkgs inputs; }
+    ))
   ];
 
   # Enable the X11 windowing system.
