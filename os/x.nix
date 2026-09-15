@@ -47,6 +47,16 @@
 
   programs.nix-index-database.enable = true;
 
+  # Keep the nix-index database (so `nix-locate` still works), but don't
+  # install the shells' "command not found" handler. That hook prints the
+  # "It is provided by several packages. You can install it by typing:
+  # nix profile install nixpkgs#..." suggestions.
+  programs.nix-index = {
+    enableBashIntegration = false;
+    enableZshIntegration = false;
+    enableFishIntegration = false;
+  };
+
   programs.nix-ld = {
     libraries = with pkgs; [
       # fonts

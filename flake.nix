@@ -7,7 +7,7 @@
       "nix-command"
     ];
     extra-substituters = [
-      "https://mirror.sjtu.edu.cn/nix-channels/store"
+      # "https://mirror.sjtu.edu.cn/nix-channels/store"
       "https://nix-community.cachix.org"
 
       "https://noctalia.cachix.org"
