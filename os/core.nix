@@ -66,7 +66,7 @@
         kbd
         openssl
         # temporarily open firewall ports at runtime, e.g.
-        #   nixos-firewall-tool open tcp 10164
+        #   nixos-firewall-tool open tcp 12345
         nixos-firewall-tool
 
         # zip

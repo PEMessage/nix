@@ -85,7 +85,7 @@
     };
   };
 
-  # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop)
+  # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop) / server (headless)
   outputs = inputs: {
     nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
@@ -143,6 +143,7 @@
         ./os/modules/home.nix
         ./os/core.nix
         ./os/dev.nix
+        ./os/server.nix
         ({ home-manager.users.pem = { imports = [ ]; }; })
       ];
     };

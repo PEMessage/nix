@@ -19,6 +19,12 @@
     iperf3
   ];
 
+  # Tailscale mesh VPN, available on every host that imports dev (wsl, desktop,
+  # servers). To join a tailnet run `tailscale up` once. On WSL2 this needs
+  # /dev/net/tun (usually present); if not, use
+  # `tailscale up --tun=userspace-networking`.
+  services.tailscale.enable = true;
+
   # home-manager: inject this feature's home config into every home user.
   home-manager.sharedModules = [
     (
