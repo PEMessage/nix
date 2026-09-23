@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ -d "$HOME/.local/share/chezmoi" ]; then
-  echo "chezmoi already initialized at $HOME/.local/share/chezmoi"
-  exit 0
+CHEZMOI_HOME="$HOME/.local/share/chezmoi"
+CHEZMOI_GIT="$CHEZMOI_HOME/.git"
+
+if [ -d "$CHEZMOI_HOME" ]; then
+    if [ ! -e "$CHEZMOI_GIT" ]; then
+        echo "last init fail at $CHEZMOI_HOME, clean up..."
+        rm -d "$CHEZMOI_HOME"
+    else
+        echo "chezmoi already initialized at $CHEZMOI_HOME"
+        exit 0
+    fi
 fi
 
 echo "Initializing chezmoi dotfiles..."
