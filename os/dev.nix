@@ -16,6 +16,7 @@
 
     # chezmoi + one-command init helper
     chezmoi
+    iperf3
   ];
 
   # home-manager: inject this feature's home config into every home user.
