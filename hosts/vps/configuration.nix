@@ -44,6 +44,19 @@
       # per-source penalty and locks us out too ("Connection closed" /
       # "Not allowed at this time"). Disable it; rely on keys + password auth.
       PerSourcePenalties = "no";
+      # Accept env vars pushed by the client via `ssh -o SetEnv=...`, e.g. so
+      # `ssh -R 7890:localhost:7890 -o SetEnv=http_proxy=http://localhost:7890`
+      # makes tools on the server fetch through the client's proxy.
+      AcceptEnv = [
+        "http_proxy"
+        "HTTP_PROXY"
+        "https_proxy"
+        "HTTPS_PROXY"
+        "socks5h_proxy"
+        "SOCKS5H_PROXY"
+        "no_proxy"
+        "NO_PROXY"
+      ];
     };
   };
 
