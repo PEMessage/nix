@@ -110,7 +110,13 @@
     # will auto enable nix-community/nix-zsh-completions
     programs.zsh.enable = true;
     environment.shells = [ pkgs.zsh ];
-    users.defaultUserShell = pkgs.zsh;
+    # zsh by default; headless servers (hostname starts with "vps") use bash.
+    # This plain value (priority 100) wins over the mkDefault bash that
+    # programs.bash provides, so no mkForce is needed.
+    users.defaultUserShell =
+      if lib.hasPrefix "vps" config.networking.hostName
+      then pkgs.bashInteractive
+      else pkgs.zsh;
 
     # appimage support
     # ===================================

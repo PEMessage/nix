@@ -134,7 +134,7 @@
       ];
     };
 
-    # Headless cloud VM (vps / KubeVirt), installed with nixos-anywhere.
+    # Headless cloud VM (KubeVirt), installed with nixos-anywhere.
     nixosConfigurations.vps = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
