@@ -78,6 +78,11 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop)
@@ -126,6 +131,19 @@
          home-manager.users.pem = { imports = [ ]; };
          networking.hostName = lib.mkForce "pro830v2";
          })
+      ];
+    };
+
+    # Headless cloud VM (vps / KubeVirt), installed with nixos-anywhere.
+    nixosConfigurations.vps = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/vps/configuration.nix
+        ./os/modules/home.nix
+        ./os/core.nix
+        ./os/dev.nix
+        ({ home-manager.users.pem = { imports = [ ]; }; })
       ];
     };
   };
