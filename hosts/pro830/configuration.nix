@@ -8,6 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+
+      # Force Tailscale over DERP + FakeHTTP + BBR.
+      ../../os/modules/tailscale-force-derp.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -117,6 +120,12 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  # Force Tailscale over DERP + FakeHTTP + BBR (see os/modules/tailscale-force-derp.nix).
+  services.tailscaleForceDerp = {
+    enable = true;
+    interface = "enp3s0";
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
