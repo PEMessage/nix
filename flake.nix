@@ -96,6 +96,7 @@
         ./hosts/wsl/configuration.nix
         ./os/modules/home.nix
         ./os/core.nix
+        ./os/basic.nix
         ./os/dev.nix
         ./os/gui.nix
         ./os/x.nix
@@ -110,6 +111,7 @@
         ./hosts/pro830/configuration.nix
         ./os/modules/home.nix
         ./os/core.nix
+        ./os/basic.nix
         ./os/dev.nix
         ./os/gui.nix
         ./os/x.nix
@@ -124,6 +126,7 @@
         ./hosts/pro830/configuration.nix
         ./os/modules/home.nix
         ./os/core.nix
+        ./os/basic.nix
         ./os/dev.nix
         ./os/gui.nix
         ./os/x.nix
@@ -142,7 +145,7 @@
         ./hosts/vps/configuration.nix
         ./os/modules/home.nix
         ./os/core.nix
-        ./os/dev.nix
+        ./os/basic.nix
         ./os/server.nix
         ({ home-manager.users.pem = { imports = [ ]; }; })
       ];

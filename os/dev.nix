@@ -1,3 +1,5 @@
+# Heavy development toolchain for workstations (wsl/desktop). Headless servers
+# import `os/basic.nix` instead, which carries the lightweight shared tools.
 { config, lib, pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
@@ -10,20 +12,14 @@
 
     # bun
     bun
-
-    # uv
-    uv
-
-    # chezmoi + one-command init helper
-    chezmoi
-    iperf3
   ];
 
-  # Tailscale mesh VPN, available on every host that imports dev (wsl, desktop,
-  # servers). To join a tailnet run `tailscale up` once. On WSL2 this needs
-  # /dev/net/tun (usually present); if not, use
-  # `tailscale up --tun=userspace-networking`.
-  services.tailscale.enable = true;
+  # appimage support (desktop/WSL only; the headless vps host imports
+  # os/basic.nix, not this module, so it doesn't pull in the whole
+  # GTK/X stack that appimage-run needs).
+  # ===================================
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = !(config.wsl.enable or false);
 
   # home-manager: inject this feature's home config into every home user.
   home-manager.sharedModules = [
@@ -35,11 +31,6 @@
           nixfmt
           tree-sitter
         ];
-
-        # one-command convenience scripts on PATH
-        script = {
-          pe-chezmoi-init = ./scripts/pe-chezmoi-init;
-        };
 
         home.file.".peprofile".text = ''
           "$(command -v bun)" > /dev/null && export PATH="$HOME/.bun/bin:$PATH"

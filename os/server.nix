@@ -8,7 +8,7 @@
     ./modules/derper.nix
   ];
 
-  # `services.tailscale.enable` lives in os/dev.nix (shared by all hosts).
+  # `services.tailscale.enable` lives in os/basic.nix (shared by all hosts).
   # The ipDerper module also pulls it in when `verifyClients` is on.
 
   # NOTE: no `networking.firewall.trustedInterfaces = [ "tailscale0" ]` here on

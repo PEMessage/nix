@@ -121,11 +121,6 @@
       then pkgs.bashInteractive
       else pkgs.zsh;
 
-    # appimage support
-    # ===================================
-    programs.appimage.enable = true;
-    programs.appimage.binfmt = !(config.wsl.enable or false);
-
     # home-manager: inject this feature's home config into every home user.
     home-manager.sharedModules = [
       (
