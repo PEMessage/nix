@@ -40,6 +40,10 @@
     derp.listenPort = 10164;
   };
 
+  # --- Honeypot -----------------------------------------------------------
+  # Multi-protocol decoy (HTTP/SSH/FTP). Enabled in os/server.nix.
+  # Public NAT ports for it must be mapped on the qiniu console.
+
   # --- SSH ----------------------------------------------------------------
   # Listen on 18622 on *all* interfaces. The cloud NAT forwards the public
   # endpoints -> guest :18622 (see the qiniu console / deploy secrets); port 22
