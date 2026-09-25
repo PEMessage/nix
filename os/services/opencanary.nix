@@ -30,7 +30,7 @@ let
     "ftp.banner" = "FTP server ready";
 
     "http.enabled" = true;
-    "http.port" = 80;
+    "http.port" = 8080;
     "http.banner" = "Apache/2.2.22 (Ubuntu)";
     "http.skin" = "nasLogin";
 
@@ -83,7 +83,7 @@ in
       default = [
         21
         22
-        80
+        8080
       ];
       description = "TCP ports the honeypot listens on (matched by its modules).";
     };
