@@ -41,10 +41,13 @@
   };
 
   # --- SSH ----------------------------------------------------------------
-  # Keep the daemon on the *internal* port 22: the cloud NAT maps a public
-  # port to guest :22, so changing it locks us out.
+  # Listen on 18622 on *all* interfaces. The cloud NAT forwards the public
+  # endpoints -> guest :18622 (see the qiniu console / deploy secrets); port 22
+  # is deliberately left free so a honeypot can take it over later.
+  # `openFirewall` defaults to true, so this port is opened automatically.
   services.openssh = {
     enable = true;
+    ports = [ 18622 ];
     # Accept keys from ~/.ssh/authorized_keys. That file is pushed in at
     # install time (nixos-anywhere --extra-files), so no key lives in git.
     authorizedKeysInHomedir = true;
