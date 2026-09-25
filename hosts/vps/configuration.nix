@@ -88,6 +88,9 @@
     group = "pem";
     extraGroups = [ "wheel" "users" ];
     hashedPasswordFile = "/var/lib/nixos-secrets/pem.hash";
+    # Keep this user's systemd services running after logout, so rootless
+    # pods (containers declared with `podman.user = "pem"`) start at boot.
+    linger = true;
   };
   users.groups.pem = { };
 

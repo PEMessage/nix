@@ -6,6 +6,9 @@
     # Self-hosted Tailscale DERP relay (services.ipDerper). Configured per host
     # in hosts/<host>/configuration.nix.
     ./modules/derper.nix
+
+    # Shared Podman + /etc/containers setup for declarative containers.
+    ./modules/podman.nix
   ];
 
   # `services.tailscale.enable` lives in os/basic.nix (shared by all hosts).
@@ -18,6 +21,10 @@
 
   # iperf3 throughput test server, reachable over the tailnet only (not public).
   services.iperf3.enable = true;
+
+  # Let unprivileged (rootless) containers bind low ports, e.g. a honeypot on
+  # :22 or :80. Required because containers run with `podman.user` (rootless).
+  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
 
   networking.firewall.interfaces.tailscale0 = {
     allowedTCPPorts = [ config.services.iperf3.port ];
