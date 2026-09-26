@@ -1,40 +1,51 @@
 # Shared services for headless server hosts (imported by the `vps` host in
 # flake.nix; the desktop/WSL hosts do not get these).
 { config, ... }:
+let
+  # Rootless honeypot service (implemented in os/services/opencanary.nix). As a
+  # home-manager module it can read `config.home.*`, so it computes the full
+  # state path itself instead of passing a partial path down.
+  homeModule =
+    { config, lib, ... }:
+    {
+      imports = [ ./services/opencanary.nix ];
+      services.opencanary = {
+        enable = true;
+        stateDir = toString (lib.path.append (/. + config.home.homeDirectory) "server/opencanary");
+        ports = {
+          ftp = 21;
+          ssh = 22;
+          http = 8080;
+        };
+      };
+    };
+in
 {
   imports = [
-    # Self-hosted Tailscale DERP relay (services.ipDerper). Configured per host
-    # in hosts/<host>/configuration.nix.
+    # Self-hosted Tailscale DERP relay (configured per host).
     ./modules/derper.nix
 
-    # Shared Podman + /etc/containers setup for declarative containers.
+    # Podman + /etc/containers plumbing.
     ./modules/podman.nix
-
-    # Declarative containerized services.
-    ./services/opencanary.nix
   ];
 
+  home-manager.sharedModules = [ homeModule ];
+
   # `services.tailscale.enable` lives in os/basic.nix (shared by all hosts).
-  # The ipDerper module also pulls it in when `verifyClients` is on.
 
-  # NOTE: no `networking.firewall.trustedInterfaces = [ "tailscale0" ]` here on
-  # purpose. The tailnet needs nothing beyond SSH (22, opened by the openssh
-  # module), the DERP port (services.ipDerper) and iperf3, so letting *all*
-  # ports on this host bypass the firewall is unnecessary attack surface.
-
-  # iperf3 throughput test server, reachable over the tailnet only (not public).
-  services.iperf3.enable = true;
-
-  # OpenCanary honeypot (see ./services/opencanary.nix). Real SSH lives on 18622;
-  # its ports are opened only on the public interface, never on tailscale0.
-  services.opencanary.enable = true;
-
-  # Let unprivileged (rootless) containers bind low ports, e.g. a honeypot on
-  # :22 or :80. Required because containers run with `podman.user` (rootless).
-  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
-
+  services.iperf3.enable = true; # tailnet only, not public
   networking.firewall.interfaces.tailscale0 = {
     allowedTCPPorts = [ config.services.iperf3.port ];
     allowedUDPPorts = [ config.services.iperf3.port ];
   };
+
+  # Let rootless containers bind low ports.
+  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
+
+  # Honeypot ports (match homeModule above), public interface only.
+  networking.firewall.interfaces.enp1s0.allowedTCPPorts = [
+    21
+    22
+    8080
+  ];
 }

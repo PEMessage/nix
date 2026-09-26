@@ -1,5 +1,6 @@
 # Podman + /etc/containers for headless server hosts (imported by os/server.nix).
-# Services declare containers via `virtualisation.oci-containers` (podman).
+# System-side plumbing only; containers are user-level Quadlets declared via
+# home-manager `services.podman` (see os/services/*.nix).
 { config, lib, pkgs, ... }:
 {
   virtualisation.podman = {
@@ -23,8 +24,6 @@
     "quay.io"
     "ghcr.io"
   ];
-
-  virtualisation.oci-containers.backend = "podman";
 
   # docker.io is unreachable here; resolve it via these mirrors (drop-in).
   # Third-party proxies: pin images by digest if you need integrity.
