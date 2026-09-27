@@ -54,6 +54,10 @@
         python3
         wget
         bc
+        file
+
+        # network
+        dig
 
         # build
         gcc
