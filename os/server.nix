@@ -8,7 +8,15 @@ let
   homeModule =
     { config, lib, ... }:
     {
-      imports = [ ./services/opencanary.nix ];
+      imports = [
+        ./services/opencanary.nix
+        ./services/index
+        ./services/reverseProxy
+      ];
+
+      # Shared podman network for the proxy and the panels it routes to.
+      services.podman.networks.proxy = { };
+
       services.opencanary = {
         enable = true;
         stateDir = toString (lib.path.append (/. + config.home.homeDirectory) "server/opencanary");
@@ -16,6 +24,19 @@ let
           ftp = 21;
           ssh = 22;
           http = 8080;
+        };
+      };
+
+      services.index.enable = true;
+
+      # Tailnet-only entry point. index is reached by its container name over
+      # the `proxy` network, so it publishes no host port; `port` is left closed
+      # in the firewall (tailnet traffic is accepted before nixos-fw).
+      services.reverseProxy = {
+        enable = true;
+        port = 80;
+        locations = {
+          "/" = "http://index:80";
         };
       };
     };
