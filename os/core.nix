@@ -29,6 +29,7 @@ in
       # See: https://nixos-and-flakes.thiscute.world/zh/nix-store/add-binary-cache-servers
       trusted-users = [
         "pem"
+        "nixos"
       ];
       # flake.nix's nixConfig holds only the hand-maintained caches. mkBefore
       # keeps them first while letting other modules append their own caches
