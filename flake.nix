@@ -1,6 +1,13 @@
 {
   description = "NixOS / home-manager configuration";
-  nixConfig = rec {
+
+  # Single source of truth for the binary caches. Order == priority:
+  # entries earlier in the list are tried first.
+  # The flake-config parser only accepts literal values here (no imports/let),
+  # so os/core.nix reads these back via `(import ../flake.nix).nixConfig`
+  # instead of keeping a second copy. See:
+  # https://nixos-and-flakes.thiscute.world/zh/nix-store/add-binary-cache-servers
+  nixConfig = {
     # Thanks https://github.com/RazYang/dotfiles/blob/443186a01817af0062ef331b628c1f2fd281d5c1/flake.nix
     experimental-features = [
       "flakes"
@@ -8,12 +15,12 @@
     ];
     extra-substituters = [
       # "https://mirror.sjtu.edu.cn/nix-channels/store"
+      "https://mirrors.cernet.edu.cn/nix-channels/store"
       "https://nix-community.cachix.org"
 
       "https://noctalia.cachix.org"
       "https://niri.cachix.org"
     ];
-    extra-trusted-substituters = extra-substituters;
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="

@@ -5,6 +5,12 @@
   inputs,
   ...
 }:
+let
+  # Reuse the caches declared in flake.nix's nixConfig instead of copying them.
+  # (`nixConfig` itself only accepts literal values, so it can't import; reading
+  # it back here from the flake file is the single-source workaround.)
+  flakeCaches = (import ../flake.nix).nixConfig;
+in
 {
   imports = [
     # ./modules/herdr
@@ -15,18 +21,28 @@
 
     # herdr.enable = true;
 
-    nix.settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+    nix.settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      # See: https://nixos-and-flakes.thiscute.world/zh/nix-store/add-binary-cache-servers
+      trusted-users = [
+        "pem"
+      ];
+      # flake.nix's nixConfig holds only the hand-maintained caches. mkBefore
+      # keeps them first while letting other modules append their own caches
+      # (niri.cachix.org from niri-flake, cache.nixos.org from nixpkgs), so
+      # nothing needs to be duplicated here.
+      substituters = lib.mkBefore flakeCaches.extra-substituters;
+      trusted-public-keys = lib.mkBefore flakeCaches.extra-trusted-public-keys;
+    };
     nix.gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 21d";
     };
     nix.optimise.automatic = true;
-    # See: https://nixos-and-flakes.thiscute.world/zh/nix-store/add-binary-cache-servers
-    nix.settings.trusted-users = [ "root" "pem" ];
 
     nixpkgs.config.allowUnfree = true;
 
