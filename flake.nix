@@ -154,7 +154,7 @@
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        ./hosts/vps/configuration.nix
+        ./hosts/vps/other/configuration.nix
         ./os/modules/home.nix
         ./os/core.nix
         ./os/basic.nix

@@ -1,6 +1,6 @@
-# Shared services for headless server hosts (imported by the `vps` host in
-# flake.nix; the desktop/WSL hosts do not get these).
-{ config, ... }:
+# Shared services for headless server hosts (imported by the hosts/vps/*
+# configurations in flake.nix; the desktop/WSL hosts do not get these).
+{ config, lib, ... }:
 let
   # Rootless honeypot service (implemented in os/services/opencanary.nix). As a
   # home-manager module it can read `config.home.*`, so it computes the full
@@ -50,23 +50,39 @@ in
     ./modules/podman.nix
   ];
 
-  home-manager.sharedModules = [ homeModule ];
-
-  # `services.tailscale.enable` lives in os/basic.nix (shared by all hosts).
-
-  services.iperf3.enable = true; # tailnet only, not public
-  networking.firewall.interfaces.tailscale0 = {
-    allowedTCPPorts = [ config.services.iperf3.port ];
-    allowedUDPPorts = [ config.services.iperf3.port ];
+  options.vps.publicInterface = lib.mkOption {
+    type = lib.types.str;
+    example = "eth0";
+    description = ''
+      Public-facing network interface on which the honeypot decoy ports are
+      opened in the firewall. Provider-specific: virtio VMs usually get
+      `enp1s0`; Alibaba ECS gets `ens5` under systemd's predictable names
+      (the vendor Ubuntu called it `eth0` via `net.ifnames=0`).
+    '';
   };
 
-  # Let rootless containers bind low ports.
-  boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
+  # Declaring `options` above forces the rest of this module's configuration
+  # into an explicit `config` attribute (otherwise Nix complains about
+  # unsupported top-level attributes).
+  config = {
+    home-manager.sharedModules = [ homeModule ];
 
-  # Honeypot ports (match homeModule above), public interface only.
-  networking.firewall.interfaces.enp1s0.allowedTCPPorts = [
-    21
-    22
-    8080
-  ];
+    # `services.tailscale.enable` lives in os/basic.nix (shared by all hosts).
+
+    services.iperf3.enable = true; # tailnet only, not public
+    networking.firewall.interfaces.tailscale0 = {
+      allowedTCPPorts = [ config.services.iperf3.port ];
+      allowedUDPPorts = [ config.services.iperf3.port ];
+    };
+
+    # Let rootless containers bind low ports.
+    boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
+
+    # Honeypot ports (match homeModule above), public interface only.
+    networking.firewall.interfaces.${config.vps.publicInterface}.allowedTCPPorts = [
+      21
+      22
+      8080
+    ];
+  };
 }
