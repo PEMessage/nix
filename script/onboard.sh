@@ -11,10 +11,10 @@
 #
 # Usage:
 #   # non-interactive, password from the environment, no confirmation prompt
-#   ROOT_PASS='...' script/onboard.sh -H root@1.2.3.4 -p 22 -c vps -a <servername> -y
+#   ROOT_PASS='...' script/onboard.sh -H root@1.2.3.4 -p 22 -c vps-ali -d vps/ali -a vps-ali -y
 #
-#   # otherwise: ssh port 22, config vps, and a password prompt
-#   script/onboard.sh -H root@1.2.3.4 -a <servername>
+#   # otherwise: ssh port 22, config vps-ali, and a password prompt
+#   script/onboard.sh -H root@1.2.3.4 -c vps-ali -d vps/ali -a <servername>
 #
 # The root password is read from $ROOT_PASS, or prompted for on a tty. It is
 # deliberately NOT accepted as a command-line argument, so it never lands in
@@ -24,10 +24,16 @@
 #   -H, --target  root@IP     target host                (required)
 #   -p, --ssh-port PORT       SSH port                   (default 22)
 #   -c, --config  NAME        nixosConfiguration         (default vps)
+#   -d, --hosts-dir DIR       hosts/<DIR> for the generated
+#                             hardware-configuration.nix  (default: $CONFIG)
 #   -a, --alias   NAME        secrets/<NAME> dir         (required, e.g. <servername>)
 #   -F, --force               overwrite existing secret files
 #   -y, --yes                 skip the destructive-action confirmation
 #   -h, --help
+#
+# The config name and the host directory differ for the nested hosts/vps/*
+# layout: e.g. -c vps-ali -d vps/ali selects nixosConfigurations.vps-ali but
+# writes hosts/vps/ali/hardware-configuration.nix.
 #
 # Scratch space is the fixed dir /tmp/nixos-onboard (printed on start, reused
 # across runs so the kexec tarball is not re-downloaded); the SSH key is always
@@ -41,6 +47,7 @@ WORK=""
 TARGET="${TARGET:-}"
 PORT="${PORT:-22}"
 CONFIG="${CONFIG:-vps}"
+HOSTS_DIR="${HOSTS_DIR:-}"
 ALIAS="${ALIAS:-}"
 RELEASE=""
 ARCH="${ARCH:-x86_64-linux}"
@@ -75,15 +82,16 @@ One-shot remote NixOS install with nixos-anywhere + disko (WIPES THE TARGET DISK
 
 Usage:
   # non-interactive, password from the environment, no confirmation prompt
-  ROOT_PASS='...' script/onboard.sh -H root@1.2.3.4 -p 22 -c vps -a <servername> -y
+  ROOT_PASS='...' script/onboard.sh -H root@1.2.3.4 -p 22 -c vps-ali -d vps/ali -a <servername> -y
 
-  # otherwise: ssh port 22, config vps, and a password prompt
-  script/onboard.sh -H root@1.2.3.4 -a <servername>
+  # otherwise: ssh port 22, config vps-ali, and a password prompt
+  script/onboard.sh -H root@1.2.3.4 -c vps-ali -d vps/ali -a <servername>
 
 Flags:
   -H, --target  root@IP     target host                (required)
   -p, --ssh-port PORT       SSH port                   (default 22)
   -c, --config  NAME        nixosConfiguration         (default vps)
+  -d, --hosts-dir DIR       hosts/<DIR> for the generated hardware-configuration.nix (default: $CONFIG)
   -a, --alias   NAME        secrets/<NAME> dir         (required, e.g. <servername>)
   -F, --force               overwrite existing secret files
   -y, --yes                 skip the destructive-action confirmation
@@ -106,6 +114,7 @@ parse_args() {
             -H|--target)   TARGET="${2:?--target needs a value}"; shift 2 ;;
             -p|--ssh-port) PORT="${2:?--ssh-port needs a value}"; shift 2 ;;
             -c|--config)   CONFIG="${2:?--config needs a value}"; shift 2 ;;
+            -d|--hosts-dir) HOSTS_DIR="${2:?--hosts-dir needs a value}"; shift 2 ;;
             -a|--alias)    ALIAS="${2:?--alias needs a value}"; shift 2 ;;
             -F|--force)    FORCE=1; shift ;;
             -y|--yes)      ASSUME_YES=1; shift ;;
@@ -139,6 +148,16 @@ resolve() {
     esac
     [[ "$ALIAS" != *..* ]] || die "--alias must not contain '..'"
 
+    # Where the generated hardware-configuration.nix is written. Hosts live
+    # under hosts/vps/<dir>, so default to vps/$CONFIG (e.g. -c vps-ali ->
+    # hosts/vps/vps-ali). Override with -d, e.g. the original host is
+    # `-c vps -d vps/other`.
+    HOSTS_DIR="${HOSTS_DIR:-vps/$CONFIG}"
+    case "$HOSTS_DIR" in
+        *[!A-Za-z0-9._/-]*) die "--hosts-dir may only contain [A-Za-z0-9._/-]" ;;
+    esac
+    [[ "$HOSTS_DIR" != *..* ]] || die "--hosts-dir must not contain '..'"
+
     # Kexec release follows the nixpkgs branch pinned in flake.nix, so the
     # bootstrap image and the installed system stay in step.
     RELEASE="$(sed -n 's/.*nixpkgs?ref=\([A-Za-z0-9._-]*\).*/\1/p' \
@@ -149,7 +168,7 @@ resolve() {
     KEXEC_URL="https://github.com/nix-community/nixos-images/releases/download/$RELEASE/nixos-kexec-installer-noninteractive-$ARCH.tar.gz"
 
     echo "target      : $TARGET:$PORT"
-    echo "config      : $CONFIG"
+    echo "config      : $CONFIG  (hosts/$HOSTS_DIR)"
     echo "alias       : $ALIAS  (secrets/$ALIAS)"
     echo "kexec       : $RELEASE ($ARCH)"
     echo "pubkey      : $PUBKEY"
@@ -228,14 +247,17 @@ make_secrets() {
     umask 077
     local base="$REPO/secrets/$ALIAS"
     local sshdir="$base/root/.ssh"
+    local pemsshdir="$base/home/pem/.ssh"
     local secretsdir="$base/var/lib/nixos-secrets"
 
     # Never delete or re-create the tree: --extra-files ships whatever is under
     # secrets/<alias>, and unrelated host secrets (e.g. derper-host) may live
     # there already. Only add what is missing.
-    runcmd mkdir -p "$sshdir" "$secretsdir"
+    runcmd mkdir -p "$sshdir" "$pemsshdir" "$secretsdir"
 
     place_file 600 "$PUBKEY" "$sshdir/authorized_keys"
+    # Same key for the normal user (sshd has authorizedKeysInHomedir = true).
+    place_file 600 "$PUBKEY" "$pemsshdir/authorized_keys"
 
     local hash
     hash="$(printf '%s' "$ROOT_PASS" | openssl passwd -6 -stdin)"
@@ -246,7 +268,7 @@ make_secrets() {
     # public IP is exactly the address we are installing onto.
     place_secret 600 "$secretsdir/derper-host" "$(target_ip)"
 
-    runcmd chmod 700 "$sshdir"
+    runcmd chmod 700 "$sshdir" "$pemsshdir"
     echo "-- secrets/$ALIAS --"
     runcmd find "$base" -printf '%M %p\n'
 }
@@ -263,7 +285,8 @@ lock_flake() {
 verify_config() {
     title
 
-    [ -d "$REPO/hosts/$CONFIG" ] || echo "warning: hosts/$CONFIG does not exist" >&2
+    [ -d "$REPO/hosts/$HOSTS_DIR" ] || \
+        die "host directory hosts/$HOSTS_DIR does not exist; pass -d (e.g. -c vps-ali -d vps/ali)"
     local names
     names="$(nix eval --json --apply builtins.attrNames \
         "$REPO#nixosConfigurations")" \
@@ -292,7 +315,7 @@ confirm() {
 install() {
     title
 
-    runcmd mkdir -p "$REPO/hosts/$CONFIG"
+    runcmd mkdir -p "$REPO/hosts/$HOSTS_DIR"
     export SSHPASS="$ROOT_PASS"
     runcmd nix run github:nix-community/nixos-anywhere -- \
         --flake "$REPO#$CONFIG" \
@@ -304,7 +327,7 @@ install() {
         --extra-files "$REPO/secrets/$ALIAS" \
         --build-on local \
         --generate-hardware-config nixos-generate-config \
-            "$REPO/hosts/$CONFIG/hardware-configuration.nix"
+            "$REPO/hosts/$HOSTS_DIR/hardware-configuration.nix"
 }
 
 # -- main -------------------------------------------------------------------

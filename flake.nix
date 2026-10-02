@@ -149,7 +149,24 @@
       ];
     };
 
-    # Headless cloud VM (KubeVirt), installed with nixos-anywhere.
+    # Headless cloud VMs, installed with nixos-anywhere. Shared modules live in
+    # hosts/vps/common; each provider supplies its own disk/boot/NIC/DERP bits.
+
+    # Alibaba Cloud ECS (UEFI), NIC eth0, hostname vps-ali.
+    nixosConfigurations.vps-ali = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/vps/ali/configuration.nix
+        ./os/modules/home.nix
+        ./os/core.nix
+        ./os/basic.nix
+        ./os/server.nix
+        ({ home-manager.users.pem = { imports = [ ]; }; })
+      ];
+    };
+
+    # Original qiniu KubeVirt VM (BIOS), NIC enp1s0, hostname vps.
     nixosConfigurations.vps = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
