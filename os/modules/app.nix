@@ -16,6 +16,7 @@ in {
   imports = [
     "${inputs.nixpkgs-unstable}/nixos/modules/programs/clash-verge.nix"
     ./waynergy
+    ./apollo
   ];
 
   environment.systemPackages = with pkgs; [

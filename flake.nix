@@ -90,6 +90,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    apollo-flake = {
+      url = "github:angelus788/apollo-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   # groups: core (have to) / dev / gui (shared by wsl and x) / x (desktop) / server (headless)
