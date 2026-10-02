@@ -120,6 +120,10 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+  programs.mosh =  {
+    enable = true;
+    openFirewall = true;
+  };
 
   # Force Tailscale over DERP + FakeHTTP + BBR (see os/modules/tailscale-force-derp.nix).
   services.tailscaleForceDerp = {
