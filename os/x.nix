@@ -45,7 +45,10 @@
     #media-session.enable = true;
   };
 
-  programs.nix-index-database.enable = true;
+  programs.nix-index-database = {
+    enable = true;
+    comma.enable = true;
+  };
 
   # Keep the nix-index database (so `nix-locate` still works), but don't
   # install the shells' "command not found" handler. That hook prints the
