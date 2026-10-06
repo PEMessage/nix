@@ -2,9 +2,8 @@
 #
 # A provider-specific host (hosts/vps/<provider>/configuration.nix) imports
 # this file plus its own ./disk-config.nix and ./hardware-configuration.nix,
-# and overrides whatever differs per provider: boot loader (BIOS vs UEFI), the
-# public NIC used by the honeypot firewall (vps.publicInterface) and the DERP
-# NAT ports.
+# and overrides whatever differs per provider: boot loader (BIOS vs UEFI) and
+# the DERP NAT ports.
 #
 # Like the desktop hosts this pulls in only the "core" + "basic" groups and a
 # home-manager user; no GUI / X. os/server.nix adds the headless services.
@@ -22,9 +21,8 @@
 
   # --- SSH ----------------------------------------------------------------
   # Listen on 18622 on *all* interfaces. The public endpoint is NAT-forwarded
-  # to guest :18622 (see the provider console); port 22 is deliberately left
-  # free so the honeypot (os/server.nix) can take it over.
-  # `openFirewall` defaults to true, so this port is opened automatically.
+  # to guest :18622 (see the provider console). `openFirewall` defaults to true,
+  # so this port is opened automatically.
   services.openssh = {
     enable = true;
     ports = [ 18622 ];
@@ -66,10 +64,9 @@
   users.users.pem = {
     isNormalUser = true;
     group = "pem";
-    extraGroups = [ "wheel" "users" ];
+    extraGroups = [ "wheel" "users" "docker" ];
     hashedPasswordFile = "/var/lib/nixos-secrets/pem.hash";
-    # Keep this user's systemd services running after logout, so rootless
-    # pods (containers declared with `podman.user = "pem"`) start at boot.
+    # Keep this user's systemd services running after logout.
     linger = true;
   };
   users.groups.pem = { };

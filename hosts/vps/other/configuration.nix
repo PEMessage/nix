@@ -22,10 +22,6 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.efiSupport = false;
 
-  # --- Honeypot -----------------------------------------------------------
-  # Open the decoy ports (HTTP/SSH/FTP, see os/server.nix) on the public NIC.
-  vps.publicInterface = "enp1s0";
-
   # --- Self-hosted DERP relay ---------------------------------------------
   # The public IP is deliberately NOT in git: hostFile is pushed in at deploy
   # time (see --extra-files ./secrets/<alias>) and read via systemd

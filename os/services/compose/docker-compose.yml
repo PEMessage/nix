@@ -1,0 +1,25 @@
+# Compose project for the tailnet-only landing page + reverse proxy.
+#
+# Installed to /etc/docker-compose/vps by os/services/compose/default.nix and
+# driven by the docker-compose-vps systemd unit. Images are pulled at start
+# through the registry mirrors configured in /etc/docker/daemon.json.
+services:
+  index:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./index/index.html:/usr/share/nginx/html/index.html:ro
+    networks: [ proxy ]
+
+  proxy:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on: [ index ]
+    ports:
+      - "80:80"
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [ proxy ]
+
+networks:
+  proxy: {}

@@ -28,12 +28,6 @@
   boot.loader.grub.efiInstallAsRemovable = true;
   boot.loader.efi.canTouchEfiVariables = false;
 
-  # --- Honeypot -----------------------------------------------------------
-  # Open the decoy ports (HTTP/SSH/FTP, see os/server.nix) on the public NIC.
-  # NixOS uses systemd's predictable names, so the ECS virtio NIC is ens5 here
-  # (the vendor Ubuntu called it eth0 because of `net.ifnames=0`).
-  vps.publicInterface = "ens5";
-
   # --- Self-hosted DERP relay ---------------------------------------------
   # Unlike qiniu, the ECS public IP is a 1:1 NAT, so derper binds the public
   # port directly (listen == public) for both DERP/TCP and STUN/UDP. The port

@@ -152,7 +152,7 @@
     # Headless cloud VMs, installed with nixos-anywhere. Shared modules live in
     # hosts/vps/common; each provider supplies its own disk/boot/NIC/DERP bits.
 
-    # Alibaba Cloud ECS (UEFI), NIC eth0, hostname vps-ali.
+    # Alibaba Cloud ECS (UEFI), NIC ens5, hostname vps-ali.
     nixosConfigurations.vps-ali = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
