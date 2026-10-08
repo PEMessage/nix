@@ -21,6 +21,7 @@
           # network
           dig
           nixos-firewall-tool
+          iperf3
 
           # build
           gcc
@@ -28,6 +29,9 @@
           binutils
           autoconf
           automake
+
+          # toolchain
+          uv
 
           # system
           kbd
@@ -46,6 +50,9 @@
           # latest
           unstable.tmux
         ];
+
+        # mesh VPN
+        services.tailscale.enable = true;
 
         home-manager.sharedModules = [ config.flake.modules.homeManager.cli ];
       };
