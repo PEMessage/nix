@@ -9,6 +9,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:denful/import-tree";
     flake-aspects.url = "github:denful/flake-aspects";
@@ -22,6 +27,7 @@
       imports = [
         inputs.flake-aspects.flakeModule
         inputs.flake-parts.flakeModules.modules
+        (inputs.import-tree ./aspects)
         (inputs.import-tree ./hosts)
       ];
     };
