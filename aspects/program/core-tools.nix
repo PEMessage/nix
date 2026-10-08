@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  flake.aspects.cli = {
+  flake.aspects.core-tools = {
     nixos =
       { pkgs, ... }:
       {
@@ -54,7 +54,7 @@
         # mesh VPN
         services.tailscale.enable = true;
 
-        home-manager.sharedModules = [ config.flake.modules.homeManager.cli ];
+        home-manager.sharedModules = [ config.flake.modules.homeManager.core-tools ];
       };
 
     homeManager =
