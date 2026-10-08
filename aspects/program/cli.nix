@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   flake.aspects.cli = {
     nixos =
@@ -46,6 +46,8 @@
           # latest
           unstable.tmux
         ];
+
+        home-manager.sharedModules = [ config.flake.modules.homeManager.cli ];
       };
 
     homeManager =

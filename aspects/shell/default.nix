@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   flake.aspects.shell = {
     nixos =
@@ -13,6 +13,8 @@
         # Plain value (100) beats the mkDefault bash from programs.bash.enable;
         # a server host overrides with `lib.mkForce pkgs.bashInteractive`.
         users.defaultUserShell = pkgs.zsh;
+
+        home-manager.sharedModules = [ config.flake.modules.homeManager.shell ];
       };
 
     homeManager = {

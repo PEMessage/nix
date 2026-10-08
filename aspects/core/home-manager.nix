@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ config, inputs, ... }:
 {
   flake.aspects.home-manager = {
     nixos = {
@@ -8,6 +8,7 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = { inherit inputs; };
+        sharedModules = [ config.flake.modules.homeManager.home-manager ];
       };
     };
 
