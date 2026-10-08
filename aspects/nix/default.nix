@@ -1,10 +1,22 @@
-{ ... }:
+{ inputs, ... }:
 {
   flake.aspects.nix = {
     nixos =
       { config, ... }:
       {
         nixpkgs.config.allowUnfree = true;
+
+        nixpkgs.overlays = [
+          # Overlay args: `final` = pkgs with all overlays applied (here we
+          # only read its `system`); `prev` = pkgs before this overlay
+          # (unused, hence the `_` prefix).
+          (final: _prev: {
+            unstable = import inputs.nixpkgs-unstable {
+              system = final.stdenv.hostPlatform.system;
+              config.allowUnfree = true;
+            };
+          })
+        ];
 
         nix.settings = {
           experimental-features = [
