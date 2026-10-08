@@ -78,6 +78,38 @@
         "type": "github"
       }
     },
+    "fcitx5-ori-theme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1721062590,
+        "narHash": "sha256-46O/wCRphjVkYCbr29QqyiGBG27u3UG2DnrInZSQkIA=",
+        "owner": "Reverier-Xu",
+        "repo": "Ori-fcitx5",
+        "rev": "d2cf5df38f11e4e14dcf9436af5b9f8fa0087c55",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Reverier-Xu",
+        "repo": "Ori-fcitx5",
+        "type": "github"
+      }
+    },
+    "fcitx5-themes-candlelight": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789353766,
+        "narHash": "sha256-Aca8JZxhdNjr/g2oRDWHsnj8mm+jvlEaxYRqCR4sU60=",
+        "owner": "thep0y",
+        "repo": "fcitx5-themes-candlelight",
+        "rev": "f297d1d43ddd5227406eae9f211cdc218af12a94",
+        "type": "github"
+      },
+      "original": {
+        "owner": "thep0y",
+        "repo": "fcitx5-themes-candlelight",
+        "type": "github"
+      }
+    },
     "flake-aspects": {
       "locked": {
         "lastModified": 1788209328,
@@ -346,6 +378,8 @@
         "dms": "dms",
         "dms-plugin-registry": "dms-plugin-registry",
         "dsearch": "dsearch",
+        "fcitx5-ori-theme": "fcitx5-ori-theme",
+        "fcitx5-themes-candlelight": "fcitx5-themes-candlelight",
         "flake-aspects": "flake-aspects",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",

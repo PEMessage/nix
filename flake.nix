@@ -38,6 +38,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    fcitx5-themes-candlelight = {
+      url = "github:thep0y/fcitx5-themes-candlelight";
+      flake = false;
+    };
+    fcitx5-ori-theme = {
+      url = "github:Reverier-Xu/Ori-fcitx5";
+      flake = false;
+    };
+
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:denful/import-tree";
     flake-aspects.url = "github:denful/flake-aspects";

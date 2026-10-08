@@ -10,5 +10,6 @@
     config.flake.modules.nixos.flatpak
     config.flake.modules.nixos.appimage
     config.flake.modules.nixos.niri
+    config.flake.modules.nixos.ime
   ];
 }
