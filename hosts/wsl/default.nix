@@ -5,7 +5,7 @@
     specialArgs = { inherit inputs; };
     modules = [
       ./_nixos/configuration.nix
-      config.flake.modules.nixos.home-manager
+      config.flake.modules.nixos.core
       config.flake.modules.nixos."user.nixos"
     ];
   };
