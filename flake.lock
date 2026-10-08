@@ -1,5 +1,83 @@
 {
   "nodes": {
+    "dank-qml-common": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791415314,
+        "narHash": "sha256-7tV9UFCKTOk8EN7gdtFJeI8NFXtopCJFC86KJU4qK44=",
+        "owner": "AvengeMedia",
+        "repo": "dank-qml-common",
+        "rev": "d5786555ccd248491017b0cf8d1bfbd9e0892e5b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "dank-qml-common",
+        "type": "github"
+      }
+    },
+    "dms": {
+      "inputs": {
+        "dank-qml-common": "dank-qml-common",
+        "flake-compat": "flake-compat",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791445482,
+        "narHash": "sha256-sAncCnTQfymN3RQbRhbnaNEEFuKlEgp0SHHElFIdxpU=",
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "rev": "c0f08f08cb7a11b2b88b4ca617dac130b58a5e0e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "type": "github"
+      }
+    },
+    "dms-plugin-registry": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791430940,
+        "narHash": "sha256-ReIVUhtiYy4JGLK/GW6m1Gr7rjNZnYJSwb2RgVHB5js=",
+        "owner": "AvengeMedia",
+        "repo": "dms-plugin-registry",
+        "rev": "1f289e9862a5f19c6d63a6931f313dad04577655",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "dms-plugin-registry",
+        "type": "github"
+      }
+    },
+    "dsearch": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788455393,
+        "narHash": "sha256-C9mVxnPCaA6mtz8H5GwMfBjOdhLRmXrpzcDc7z99iOo=",
+        "owner": "AvengeMedia",
+        "repo": "danksearch",
+        "rev": "984f86e644a93d2a366d960e3c56233260a501de",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "danksearch",
+        "type": "github"
+      }
+    },
     "flake-aspects": {
       "locked": {
         "lastModified": 1788209328,
@@ -16,6 +94,22 @@
       }
     },
     "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767039857,
+        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_2": {
       "flake": false,
       "locked": {
         "lastModified": 1767039857,
@@ -165,7 +259,7 @@
     },
     "nixos-wsl": {
       "inputs": {
-        "flake-compat": "flake-compat",
+        "flake-compat": "flake-compat_2",
         "nixpkgs": [
           "nixpkgs"
         ]
@@ -249,6 +343,9 @@
     },
     "root": {
       "inputs": {
+        "dms": "dms",
+        "dms-plugin-registry": "dms-plugin-registry",
+        "dsearch": "dsearch",
         "flake-aspects": "flake-aspects",
         "flake-parts": "flake-parts",
         "home-manager": "home-manager",

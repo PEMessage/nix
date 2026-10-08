@@ -11,7 +11,10 @@ in
         userName = builtins.head (builtins.attrNames config.home-manager.users);
       in
       {
-        imports = [ inputs.niri.nixosModules.niri ];
+        imports = [
+          inputs.niri.nixosModules.niri
+          fp.flake.modules.nixos.dms
+        ];
 
         programs.niri = {
           enable = true;
