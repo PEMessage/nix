@@ -10,5 +10,10 @@
         extraSpecialArgs = { inherit inputs; };
       };
     };
+
+    homeManager = {
+      home.stateVersion = "26.05";
+      xdg.enable = true;
+    };
   };
 }
