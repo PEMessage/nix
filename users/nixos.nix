@@ -6,6 +6,7 @@
     home-manager.users.nixos.imports = [
       config.flake.modules.homeManager.home-manager
       config.flake.modules.homeManager.shell
+      config.flake.modules.homeManager.cli
     ];
   };
 }

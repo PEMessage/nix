@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CHEZMOI_HOME="$HOME/.local/share/chezmoi"
+CHEZMOI_GIT="$CHEZMOI_HOME/.git"
+
+if [ -d "$CHEZMOI_HOME" ]; then
+    if [ ! -e "$CHEZMOI_GIT" ]; then
+        echo "last init fail at $CHEZMOI_HOME, clean up..."
+        rm -d "$CHEZMOI_HOME"
+    else
+        echo "chezmoi already initialized at $CHEZMOI_HOME"
+        exit 0
+    fi
+fi
+
+echo "Initializing chezmoi dotfiles..."
+chezmoi init --branch linux-v2 --apply pemessage --depth 1

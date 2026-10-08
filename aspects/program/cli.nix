@@ -15,6 +15,9 @@
           file
           kmod
 
+          # dotfiles
+          chezmoi
+
           # network
           dig
           nixos-firewall-tool
@@ -42,6 +45,14 @@
 
           # latest
           unstable.tmux
+        ];
+      };
+
+    homeManager =
+      { pkgs, ... }:
+      {
+        home.packages = [
+          (pkgs.writeShellScriptBin "pe-chezmoi-init" (builtins.readFile ./pe-chezmoi-init))
         ];
       };
   };
