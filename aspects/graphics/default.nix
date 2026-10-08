@@ -20,6 +20,11 @@
           pulse.enable = true;
         };
 
+        xdg.portal = {
+          enable = true;
+          extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+        };
+
         programs.nix-ld.libraries = with pkgs; [
           # fonts
           fontconfig
