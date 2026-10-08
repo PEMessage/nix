@@ -9,5 +9,6 @@
     config.flake.modules.nixos.gaming
     config.flake.modules.nixos.flatpak
     config.flake.modules.nixos.appimage
+    config.flake.modules.nixos.niri
   ];
 }
