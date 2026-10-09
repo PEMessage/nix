@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cert_dir="$HOME/.config/waynergy/tls"
+cert="$cert_dir/cert"
+
+if [ -f "$cert" ]; then
+  echo "waynergy TLS cert already exists: $cert"
+  exit 0
+fi
+
+echo "Generating waynergy TLS client certificate..."
+mkdir -p "$cert_dir"
+openssl req -x509 -newkey rsa:2048 -keyout "$cert" -out "$cert.pub" \
+  -days 3650 -nodes -subj "/CN=$(hostname)-waynergy-client"
+cat "$cert.pub" >> "$cert"
+rm -f "$cert.pub"
+chmod 600 "$cert"
+echo "Certificate written to $cert"

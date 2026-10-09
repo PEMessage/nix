@@ -37,6 +37,10 @@ in
         };
         services.displayManager.enable = false;
 
+        # remote VNC server
+        programs.wayvnc.enable = true;
+        networking.firewall.allowedTCPPorts = [ 5900 ];
+
         services.gvfs.enable = true;
 
         environment.systemPackages = with pkgs; [
@@ -51,6 +55,8 @@ in
     homeManager =
       { config, lib, pkgs, inputs, ... }:
       {
+        imports = [ fp.flake.modules.homeManager.waynergy ];
+
         options.niriConfig.lines = lib.mkOption {
           type = lib.types.listOf lib.types.str;
           default = [ ];
