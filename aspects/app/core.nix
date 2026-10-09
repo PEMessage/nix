@@ -19,6 +19,8 @@
         environment.systemPackages = with pkgs; [
           ghostty
           chrome-zh
+          xclip
+          wl-clipboard
         ];
 
         programs.clash-verge = {
