@@ -38,6 +38,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    apollo-flake = {
+      url = "github:angelus788/apollo-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     fcitx5-themes-candlelight = {
       url = "github:thep0y/fcitx5-themes-candlelight";
       flake = false;
