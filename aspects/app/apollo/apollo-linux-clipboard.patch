@@ -1,0 +1,49 @@
+--- a/src/platform/linux/misc.cpp
++++ b/src/platform/linux/misc.cpp
+@@ -9,6 +9,8 @@
+ #endif
+ 
+ // standard includes
++#include <array>
++#include <cstdio>
+ #include <fstream>
+ #include <iostream>
+ 
+@@ -1065,13 +1067,33 @@
+ 
+   std::string
+   get_clipboard() {
+-    // Placeholder
+-    return "";
++    std::string result;
++    FILE *pipe = popen("wl-paste --no-newline --type text/plain 2>/dev/null", "r");
++    if (!pipe) {
++      BOOST_LOG(warning) << "Failed to run wl-paste for clipboard"sv;
++      return result;
++    }
++
++    std::array<char, 8192> buffer;
++    std::size_t n;
++    while ((n = fread(buffer.data(), 1, buffer.size(), pipe)) > 0) {
++      result.append(buffer.data(), n);
++    }
++
++    pclose(pipe);
++    return result;
+   }
+ 
+   bool
+   set_clipboard(const std::string& content) {
+-    // Placeholder
+-    return false;
++    FILE *pipe = popen("wl-copy --type text/plain 2>/dev/null", "w");
++    if (!pipe) {
++      BOOST_LOG(warning) << "Failed to run wl-copy for clipboard"sv;
++      return false;
++    }
++
++    auto written = fwrite(content.data(), 1, content.size(), pipe);
++    auto status = pclose(pipe);
++    return written == content.size() && status == 0;
+   }
+ }  // namespace platf
