@@ -1,7 +1,8 @@
 # Host-specific configuration for wks-revo (the workstation formerly known as
 # pro830). Feature stacks live in aspects and are composed via the `desktop`
-# profile; this file keeps only machine-specific bits: boot loader, hardware,
-# hostname, locale, and the host-pinned network tweaks.
+# profile. This file keeps only rarely-changing machine facts: boot loader,
+# hardware, hostname, locale, and stateVersion. Anything more volatile (remote
+# access, host-pinned network tweaks) lives in the host module in ../default.nix.
 { ... }:
 
 {
@@ -38,21 +39,6 @@
     LC_PAPER = "zh_CN.UTF-8";
     LC_TELEPHONE = "zh_CN.UTF-8";
     LC_TIME = "zh_CN.UTF-8";
-  };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  programs.mosh = {
-    enable = true;
-    openFirewall = true;
-  };
-
-  # Force Tailscale over DERP + FakeHTTP + BBR (see the tailscale-force-derp
-  # aspect).
-  services.tailscaleForceDerp = {
-    enable = true;
-    interface = "enp3s0";
   };
 
   # This value defines the first version of NixOS installed on this machine.
