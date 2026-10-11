@@ -48,6 +48,7 @@
           plugins = {
             wallpaperBing.enable = true;
             wallpaperBingWidget.enable = true;
+            unifiedTaskbar.enable = true;
           };
 
           managePluginSettings = true;
@@ -77,6 +78,7 @@
                   "launcherButton"
                   "workspaceSwitcher"
                   "focusedWindow"
+                  "unifiedTaskbar"
                 ];
                 centerWidgets = [
                   "music"
