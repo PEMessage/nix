@@ -1,6 +1,6 @@
 { ... }:
 {
-  flake.aspects.graphics = {
+  flake.aspects.xserver = {
     nixos =
       { pkgs, ... }:
       {

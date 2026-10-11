@@ -61,7 +61,7 @@
       { pkgs, ... }:
       {
         home.packages = [
-          (pkgs.writeShellScriptBin "pe-chezmoi-init" (builtins.readFile ./pe-chezmoi-init))
+          (pkgs.writeShellScriptBin "pe-chezmoi-init" (builtins.readFile ./script/pe-chezmoi-init))
         ];
       };
   };
