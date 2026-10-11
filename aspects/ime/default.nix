@@ -5,7 +5,7 @@ in
 {
   flake.aspects.ime = {
     nixos =
-      { config, lib, pkgs, ... }:
+      { config, pkgs, ... }:
       let
         # macOS Sonoma Dark theme from the non-flake candlelight repo
         candlelight = pkgs.linkFarm "fcitx5-themes-candlelight" {
@@ -17,9 +17,7 @@ in
           "share/fcitx5/themes/OriLight" = "${inputs.fcitx5-ori-theme}/OriLight";
         };
       in
-      # WSLg already provides the input path, and fcitx's clipboard/X11
-      # traffic is a known trigger for the WSLg weston clipboard crash.
-      lib.mkIf (!(config.wsl.enable or false)) {
+      {
         i18n.inputMethod = {
           type = "fcitx5";
           enable = true;

@@ -5,11 +5,9 @@
   };
 
   flake.aspects.appimage = {
-    nixos =
-      { config, ... }:
-      {
-        programs.appimage.enable = true;
-        programs.appimage.binfmt = !(config.wsl.enable or false);
-      };
+    nixos = {
+      programs.appimage.enable = true;
+      programs.appimage.binfmt = true;
+    };
   };
 }
