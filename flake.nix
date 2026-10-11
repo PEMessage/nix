@@ -60,6 +60,9 @@
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      # Expose `self.debug.options` so nixd can resolve flake-parts option
+      # attrpaths (`flake.*` / `config.flake.*`). See: https://flake.parts/debug
+      debug = true;
       systems = [ "x86_64-linux" ];
 
       flake.nixConfig = {

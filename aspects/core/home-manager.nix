@@ -1,7 +1,7 @@
 { config, inputs, ... }:
 {
   flake.aspects.home-manager = {
-    nixos = {
+    nixos = { ... }: {
       imports = [ inputs.home-manager.nixosModules.home-manager ];
 
       home-manager = {
@@ -12,7 +12,7 @@
       };
     };
 
-    homeManager = {
+    homeManager = { ... }: {
       home.stateVersion = "26.05";
       xdg.enable = true;
     };

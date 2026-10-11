@@ -4,7 +4,7 @@
   # Defined here (not in _nixos/configuration.nix) so that file only holds
   # rarely-changing machine facts (boot loader, hostname, locale, stateVersion).
   # The host imports it below, i.e. it enables itself.
-  flake.modules.nixos."host.wks-revo" = {
+  flake.modules.nixos."host.wks-revo" = { ... }: {
     imports = [
       config.flake.modules.nixos.tailscale-force-derp
     ];
@@ -28,7 +28,7 @@
   };
 
   # Host-specific home-manager module: per-user app config for this host.
-  flake.modules.homeManager."host.wks-revo" = {
+  flake.modules.homeManager."host.wks-revo" = { ... }: {
     imports = [ config.flake.modules.homeManager.waynergy ];
 
     # Waynergy Synergy client (aspect app/waynergy).

@@ -1,7 +1,7 @@
 { ... }:
 {
   flake.aspects.gaming = {
-    nixos = {
+    nixos = { ... }: {
       programs.steam = {
         enable = true;
         remotePlay.openFirewall = true;

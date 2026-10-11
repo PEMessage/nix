@@ -1,6 +1,6 @@
 { inputs, config, ... }:
 {
-  flake.modules.nixos."host.wsl" = {
+  flake.modules.nixos."host.wsl" = { ... }: {
     networking.hostName = "wsl";
     time.timeZone = "Asia/Shanghai";
   };

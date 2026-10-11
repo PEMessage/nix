@@ -1,11 +1,13 @@
 { ... }:
 {
   flake.aspects.flatpak = {
-    nixos.services.flatpak.enable = true;
+    nixos = { ... }: {
+      services.flatpak.enable = true;
+    };
   };
 
   flake.aspects.appimage = {
-    nixos = {
+    nixos = { ... }: {
       programs.appimage.enable = true;
       programs.appimage.binfmt = true;
     };
