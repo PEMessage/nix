@@ -19,6 +19,20 @@
       enable = true;
       interface = "enp3s0";
     };
+
+    # Pull in this host's home-manager module (per-user app config).
+    home-manager.sharedModules = [ config.flake.modules.homeManager."host.wks-revo" ];
+  };
+
+  # Host-specific home-manager module: per-user app config for this host.
+  flake.modules.homeManager."host.wks-revo" = {
+    imports = [ config.flake.modules.homeManager.waynergy ];
+
+    # Waynergy Synergy client (aspect app/waynergy).
+    waynergy = {
+      enable = true;
+      host = "192.168.123.74";
+    };
   };
 
   flake.nixosConfigurations.wks-revo = inputs.nixpkgs.lib.nixosSystem {

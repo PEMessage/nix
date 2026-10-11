@@ -19,9 +19,11 @@
       in
       {
         options.waynergy = {
+          enable = lib.mkEnableOption "Waynergy Synergy protocol client";
+
           host = lib.mkOption {
             type = lib.types.str;
-            default = "192.168.123.74";
+            example = "1.2.3.4";
             description = "Synergy/Barrier server to connect to.";
           };
 
@@ -86,7 +88,7 @@
           };
         };
 
-        config = {
+        config = lib.mkIf cfg.enable {
           home.packages = [
             waynergy-patched
             (pkgs.writeShellScriptBin "waynergy-tls-init" (builtins.readFile ./waynergy-tls-init))

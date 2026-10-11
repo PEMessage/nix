@@ -55,8 +55,6 @@ in
     homeManager =
       { config, lib, pkgs, inputs, ... }:
       {
-        imports = [ fp.flake.modules.homeManager.waynergy ];
-
         options.niriConfig.lines = lib.mkOption {
           type = lib.types.listOf lib.types.str;
           default = [ ];
