@@ -5,19 +5,22 @@
   # rarely-changing machine facts (boot loader, hostname, locale, stateVersion).
   # The host imports it below, i.e. it enables itself.
   flake.modules.nixos."host.wks-revo" = {
-    # Enable the OpenSSH daemon.
-    services.openssh.enable = true;
-
-    programs.mosh = {
-      enable = true;
-      openFirewall = true;
-    };
+    imports = [
+      config.flake.modules.nixos.tailscale-force-derp
+    ];
 
     # Force Tailscale over DERP + FakeHTTP + BBR (see the tailscale-force-derp
     # aspect).
     services.tailscaleForceDerp = {
       enable = true;
       interface = "enp3s0";
+    };
+
+    services.openssh.enable = true;
+
+    programs.mosh = {
+      enable = true;
+      openFirewall = true;
     };
 
     # Pull in this host's home-manager module (per-user app config).
@@ -41,10 +44,10 @@
     modules = [
       ./_nixos/configuration.nix
       config.flake.modules.nixos."host.wks-revo"
-      config.flake.modules.nixos.desktop-extra
-      config.flake.modules.nixos.desktop
-      config.flake.modules.nixos.tailscale-force-derp
       config.flake.modules.nixos."user.pem"
+      config.flake.modules.nixos.desktop
+      config.flake.modules.nixos.desktop-extra
+
     ];
   };
 }
