@@ -4,18 +4,14 @@
     nixos =
       { pkgs, ... }:
       {
-        imports = [ inputs.dms.nixosModules.default ];
+        imports = [
+          inputs.dms.nixosModules.default
+          config.flake.modules.nixos.icons
+        ];
 
         programs.dank-material-shell.enable = true;
 
-        # The session can't read gsettings (no schemas in XDG_DATA_DIRS), so
-        # GTK/Qt fall back to the hardcoded "Adwaita" icon theme; installing it
-        # (plus hicolor fallback) keeps themed icons from rendering as
-        # placeholder squares.
         environment.systemPackages = [
-          pkgs.adwaita-icon-theme
-          pkgs.hicolor-icon-theme
-          pkgs.papirus-icon-theme
           pkgs.inotify-tools # dms-plugin-registry wallpaperBing daemon dependency
         ];
 
@@ -59,6 +55,15 @@
             dynamicTheming = true;
             currentThemeName = "dynamic";
             currentThemeCategory = "dynamic";
+
+            # Let DMS manage the icon theme, switching per light/dark mode
+            # between the two generated meta-themes (aspect icons /
+            # niri/_package/link-icon-theme):
+            #   LinkDark  -> Papirus-Dark -> breeze-dark -> Adwaita -> hicolor
+            #   LinkLight -> Papirus      -> breeze      -> Adwaita -> hicolor
+            iconThemePerMode = true;
+            iconThemeDark = "LinkDark";
+            iconThemeLight = "LinkDark";
 
             # blur
             blurEnabled = true;
