@@ -9,6 +9,7 @@
         environment.systemPackages = with pkgs; [
           # c/c++
           gdb
+          git-extras
 
           # rust
           rustc
