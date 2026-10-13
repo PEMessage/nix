@@ -56,14 +56,10 @@
             currentThemeName = "dynamic";
             currentThemeCategory = "dynamic";
 
-            # Let DMS manage the icon theme, switching per light/dark mode
-            # between the two generated meta-themes (aspect icons /
-            # niri/_package/link-icon-theme):
-            #   LinkDark  -> Papirus-Dark -> breeze-dark -> Adwaita -> hicolor
-            #   LinkLight -> Papirus      -> breeze      -> Adwaita -> hicolor
-            iconThemePerMode = true;
-            iconThemeDark = "LinkDark";
-            iconThemeLight = "LinkDark";
+            # DMS-managed icon theme: the single meta-theme LinkIcons
+            # (LinkIcons -> Papirus-Dark -> breeze-dark -> Adwaita -> hicolor).
+            # perMode is off, so only iconThemeDark is used.
+            iconThemeDark = "LinkIcons";
 
             # blur
             blurEnabled = true;
