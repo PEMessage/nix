@@ -5,5 +5,6 @@
     config.flake.modules.nixos.home-manager
     config.flake.modules.nixos.core-tools
     config.flake.modules.nixos.shell
+    config.flake.modules.nixos.secrets
   ];
 }

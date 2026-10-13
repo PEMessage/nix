@@ -17,6 +17,20 @@
 
           # bun
           bun
+
+          # build
+          just
+
+          # secrets
+          (symlinkJoin {
+            name = "infisical";
+            paths = [ unstable.infisical ];
+            nativeBuildInputs = [ makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/infisical \
+                --set-default INFISICAL_DISABLE_UPDATE_CHECK true
+            '';
+          })
         ];
 
         programs.nix-index-database = {
