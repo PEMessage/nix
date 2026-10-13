@@ -23,6 +23,16 @@
       openFirewall = true;
     };
 
+    # Bluetooth (this is the only host with radio hardware).
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+
+    # DMS battery widget and control-center power profile.
+    services.upower.enable = true;
+    services.power-profiles-daemon.enable = true;
+
     # Pull in this host's home-manager module (per-user app config).
     home-manager.sharedModules = [ config.flake.modules.homeManager."host.wks-revo" ];
   };
