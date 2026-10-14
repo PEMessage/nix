@@ -33,6 +33,13 @@
           })
         ];
 
+        # Replace uv to unstable one
+        nixpkgs.overlays = [
+          (final: prev: {
+            uv = pkgs.unstable.uv;
+          })
+        ];
+
         programs.nix-index-database = {
           enable = true;
           comma.enable = true;
