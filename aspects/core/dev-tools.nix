@@ -52,6 +52,13 @@
           enableFishIntegration = false;
         };
 
+        # direnv: the hook goes into /etc/zshrc (programs.zsh.interactiveShellInit),
+        programs.direnv = {
+          enable = true;
+          # silent = true; # hide the env-diff spam on every load
+          nix-direnv.enable = true;
+        };
+
         home-manager.sharedModules = [ config.flake.modules.homeManager.dev-tools ];
       };
 
