@@ -14,6 +14,7 @@ in
         imports = [
           inputs.niri.nixosModules.niri
           fp.flake.modules.nixos.dms
+          fp.flake.modules.nixos.piri
         ];
 
         programs.niri = {
@@ -44,7 +45,6 @@ in
         services.gvfs.enable = true;
 
         environment.systemPackages = with pkgs; [
-          fuzzel
           swaylock
           nautilus
         ];

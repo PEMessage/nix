@@ -427,6 +427,26 @@
         "type": "github"
       }
     },
+    "piri": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787823289,
+        "narHash": "sha256-pEZYmm4iYpS+LEBrstUNfIgAZm1VlI2S+7W41BLhoGk=",
+        "owner": "Asthestarsfalll",
+        "repo": "piri",
+        "rev": "fdfa170eee55af03e21d3626901ad7f45c3a8197",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Asthestarsfalll",
+        "repo": "piri",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "apollo-flake": "apollo-flake",
@@ -444,6 +464,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "piri": "piri",
         "sops-nix": "sops-nix"
       }
     },
