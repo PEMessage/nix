@@ -15,6 +15,7 @@ in
           inputs.niri.nixosModules.niri
           fp.flake.modules.nixos.dms
           fp.flake.modules.nixos.piri
+          fp.flake.modules.nixos.rofi
         ];
 
         programs.niri = {

@@ -51,6 +51,11 @@
           settings = {
             configVersion = 16;
 
+            # Let DMS run the user matugen templates from
+            # ~/.config/matugen/config.toml; the rofi aspect renders its
+            # window-switcher theme there so it follows the dynamic palette.
+            runUserMatugenTemplates = true;
+
             theme = "dark";
             dynamicTheming = true;
             currentThemeName = "dynamic";
