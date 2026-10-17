@@ -47,6 +47,7 @@ in
         environment.systemPackages = with pkgs; [
           swaylock
           nautilus
+          seahorse
         ];
 
         home-manager.sharedModules = [ fp.flake.modules.homeManager.niri ];
