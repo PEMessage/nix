@@ -78,7 +78,7 @@
       ./_nixos/configuration.nix
       config.flake.modules.nixos."host.vm-citrine"
       config.flake.modules.nixos."user.pem"
-      config.flake.modules.nixos.core
+      config.flake.modules.nixos.server
     ];
   };
 }
