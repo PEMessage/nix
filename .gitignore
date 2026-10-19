@@ -1,1 +1,7 @@
 REFACTOR.md
+
+# The separate secrets repo (a checkout of the root-encrypted per-host keys) and
+# any backup of it. The nixos-side encrypted secrets live at
+# hosts/<host>/secret.yaml and ARE committed.
+/secrets/
+/secrets.bak/

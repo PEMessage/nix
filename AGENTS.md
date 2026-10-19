@@ -39,6 +39,19 @@ An aspect bundles one capability's **NixOS half** and **home-manager half**:
   `home-manager.sharedModules`, so enabling a system feature also wires its user side.
 - Aspect names may be quoted dotted strings, e.g. `"user.nixos"`, `"host.wks-revo"`.
 
+## Secrets (sops)
+
+- **Encrypted per-host secrets are committed**, one per host at
+  `hosts/<host>/secret.yaml`, each encrypted to that host's own age key so a
+  host can decrypt only its own. Wire it up with
+  `sops.defaultSopsFile = ./secret.yaml;`, and tag anything read before users
+  exist (e.g. `hashedPasswordFile`) `neededForUsers = true;`.
+- **The keys are not.** A host's age key lives on the host at
+  `/var/lib/sops-nix/key.txt` (see `aspects/core/secrets.nix`) and is kept in the
+  separate `secrets` repo, encrypted to a root key that never enters VCS. It is
+  copied onto a machine only at onboard time; day-to-day use never needs it.
+- Key layout, tooling and workflows live in that repo's own README.
+
 ## Layout
 
 | Dir | Role |
@@ -49,7 +62,7 @@ An aspect bundles one capability's **NixOS half** and **home-manager half**:
 | `hosts/` | per-host modules + `nixosConfigurations` entry |
 | `pkgs/` | local packages (`callPackage`) |
 | `script/` | ops scripts (e.g. `onboard.sh`) |
-| `secrets/` | secrets — **never commit** |
+| `secrets/` | checkout of the separate secrets repo — gitignored here |
 
 ## Composition
 
