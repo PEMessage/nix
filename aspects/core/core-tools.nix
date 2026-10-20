@@ -36,6 +36,7 @@
           # system
           kbd
           openssl
+          lsof
 
           # zip
           _7zz
