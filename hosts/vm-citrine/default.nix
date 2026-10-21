@@ -17,6 +17,19 @@
       networking.useDHCP = true;
       networking.firewall.enable = true;
 
+      # Aliyun (this is an ECS instance) serves DNS from DHCP as
+      # 100.100.2.136/.138 and metadata at 100.100.100.200 — all inside
+      # 100.64.0.0/10, the CGNAT range Tailscale claims for itself. Tailscale's
+      # default ts-input rule ("-s 100.64.0.0/10 ! -i tailscale0 -j DROP") then
+      # drops their replies on arrival, which silently kills all name
+      # resolution (looks like "no internet", but IP traffic is fine).
+      #
+      # The fix is NOT in this repo: the tailnet policy file gives this node the
+      # node attribute `disable-linux-cgnat-drop-rule` (applied via the tag
+      # `tag:disable-linux-cgnat-drop-rule`), which turns that DROP into a
+      # RETURN. Removing the tag breaks DNS again — do not "clean it up".
+      # https://tailscale.com/docs/reference/cgnat-interoperability
+
       # --- SSH --------------------------------------------------------------
       # Listen on 18622 on all interfaces; the provider NAT-forwards its public
       # endpoint (:18622) to guest :18622. `openFirewall` defaults
