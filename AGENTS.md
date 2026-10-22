@@ -64,6 +64,12 @@ An aspect bundles one capability's **NixOS half** and **home-manager half**:
 | `script/` | ops scripts (e.g. `onboard.sh`) |
 | `secrets/` | checkout of the separate secrets repo — gitignored here |
 
+## Host slug
+
+`<form>-<codename>`: `wks-` physical workstation, `vm-` virtual machine; the
+codename is a gemstone, chemical element, color, or mythology name. E.g.
+`vm-citrine`, `wks-onyx`.
+
 ## Composition
 
 - **Profiles** only aggregate, e.g. `desktop.imports = [ core dev-tools fonts
