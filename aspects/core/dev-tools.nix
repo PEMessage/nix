@@ -63,7 +63,7 @@
       };
 
     homeManager =
-      { pkgs, ... }:
+      { config, pkgs, ... }:
       {
         # `programs.pnpm` only exists on home-manager master; import that single
         # module file instead of moving the whole user base off release-26.05.
@@ -77,9 +77,13 @@
 
         programs.pnpm.enable = true;
 
-        home.file.".peprofile".text = ''
-          "$(command -v bun)" > /dev/null && export PATH="$HOME/.bun/bin:$PATH"
-        '';
+        # `bun add -g` installs into $BUN_INSTALL/bin (~/.bun/bin) and
+        # home-manager's programs.bun does not touch PATH or BUN_INSTALL, so
+        # wire it up as session variables. This replaces the old
+        # ~/.peprofile guard: session variables only started reaching the shell
+        # once ~/.zshenv sourced hm-session-vars.sh.
+        home.sessionVariables.BUN_INSTALL = "${config.home.homeDirectory}/.bun";
+        home.sessionPath = [ "${config.home.homeDirectory}/.bun/bin" ];
       };
   };
 }
