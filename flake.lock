@@ -255,6 +255,26 @@
         "type": "github"
       }
     },
+    "home-manager-unstable": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792703141,
+        "narHash": "sha256-3X34FaSeMJXMx8CK/BN6sZ9knwNauuiJXQhLM+bQQuI=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "6750249c69969d09d952efaf3fab88a2bdac7ec6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "import-tree": {
       "locked": {
         "lastModified": 1788467110,
@@ -459,6 +479,7 @@
         "flake-aspects": "flake-aspects",
         "flake-parts": "flake-parts_2",
         "home-manager": "home-manager",
+        "home-manager-unstable": "home-manager-unstable",
         "import-tree": "import-tree",
         "niri": "niri",
         "nix-index-database": "nix-index-database",

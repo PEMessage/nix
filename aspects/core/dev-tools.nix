@@ -65,11 +65,17 @@
     homeManager =
       { pkgs, ... }:
       {
+        # `programs.pnpm` only exists on home-manager master; import that single
+        # module file instead of moving the whole user base off release-26.05.
+        imports = [ "${inputs.home-manager-unstable}/modules/programs/pnpm.nix" ];
+
         home.packages = with pkgs; [
           gh
           nixfmt
           tree-sitter
         ];
+
+        programs.pnpm.enable = true;
 
         home.file.".peprofile".text = ''
           "$(command -v bun)" > /dev/null && export PATH="$HOME/.bun/bin:$PATH"

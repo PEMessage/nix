@@ -15,6 +15,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Only used for the odd module that has not landed in release-26.05 yet
+    # (currently `programs/pnpm.nix`); never imported as a whole module set.
+    # Follows nixpkgs-unstable, the branch this home-manager master targets.
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
