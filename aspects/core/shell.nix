@@ -17,14 +17,33 @@
         home-manager.sharedModules = [ config.flake.modules.homeManager.shell ];
       };
 
-    homeManager = {
-      home.file.".profile".text = ''
-        if [ -n "$BASH_VERSION" ]; then
-          if [ -f "$HOME/.bashrc" ]; then
-            . "$HOME/.bashrc"
-          fi
-        fi
-      '';
-    };
+    homeManager =
+      { config, ... }:
+      {
+
+        programs.zsh.enable = true;
+        # Mirror home-manager's own shell wiring without enabling its shell
+        # modules, because chezmoi owns ~/.zshrc and ~/.bashrc and
+        # `programs.zsh` / `programs.bash` would take those files over. Same
+        # files, same contents as the modules would write:
+        #   ~/.zshenv       -> read by every zsh, interactive or not
+        #   ~/.bash_profile -> login bash; bridges to ~/.profile and ~/.bashrc
+        #   ~/.profile      -> login sh/bash; session variables only
+        home.file.".zshenv".text = ''
+          . ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh
+        '';
+
+        home.file.".bash_profile".text = ''
+          # include .profile if it exists
+          [[ -f ~/.profile ]] && . ~/.profile
+
+          # include .bashrc if it exists
+          [[ -f ~/.bashrc ]] && . ~/.bashrc
+        '';
+
+        home.file.".profile".text = ''
+          . ${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh
+        '';
+      };
   };
 }
