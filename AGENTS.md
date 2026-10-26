@@ -106,6 +106,8 @@ sudo nixos-rebuild switch --flake .#wsl
 - Add a feature: create `aspects/<domain>/<name>.nix` with `flake.aspects.<name>`,
   then add it to a `profile/*.nix` `imports`. `import-tree` finds it automatically.
 - Reference modules as `config.flake.modules.<class>.<name>`, not by path.
+- Write module halves as functions (`nixos = { ... }: { ... }`), never a bare
+  attrset — nixd only resolves options inside a lambda.
 - Comments explain **why**, not what — many decisions (apollo clipboard patch,
   tailscale-force-derp FakeHTTP/BBR, niri/dms wiring) live only in comments.
 - Local packages go in `pkgs/`; scripts in `script/` or inline `writeShellScriptBin`.
