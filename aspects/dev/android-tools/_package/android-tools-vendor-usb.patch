@@ -1,0 +1,29 @@
+Widen adb's USB interface filter so it also accepts the vendor-remapped
+ff/ff/ff function, which some devices use instead of the standard ff/42/01.
+
+adb picks its USB transport from the interface triple alone, in
+is_adb_interface(); every other interface is skipped *silently*, which is why
+`adb devices` can be empty while `lsusb` shows the device. The wire protocol
+behind ff/ff/ff is the stock adb protocol -- only the descriptors differ.
+
+--- a/vendor/adb/client/transport_usb.cpp
++++ b/vendor/adb/client/transport_usb.cpp
+@@ -171,10 +171,15 @@
+ bool is_adb_interface(int usb_class, int usb_subclass, int usb_protocol) {
+     // ADB over gadget mode and DbC use the same ADB protocol.
+     if (usb_protocol == ADB_PROTOCOL && ((usb_class == ADB_CLASS && usb_subclass == ADB_SUBCLASS) ||
+-            (usb_class == ADB_DBC_CLASS && usb_subclass == ADB_DBC_SUBCLASS)))
++            (usb_class == ADB_DBC_CLASS && usb_subclass == ADB_DBC_SUBCLASS))) {
+         return true;
+-    else
+-        return false;
++    }
++    // Vendor-remapped adb function: same adb protocol, but the interface is
++    // advertised as ff/ff/ff so that stock platform-tools ignore the device.
++    if (usb_class == 0xff && usb_subclass == 0xff && usb_protocol == 0xff) {
++        return true;
++    }
++    return false;
+ }
+ 
+ bool is_libusb_enabled() {

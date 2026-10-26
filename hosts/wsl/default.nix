@@ -6,6 +6,15 @@
 
     wsl.useWindowsDriver = true;
 
+    # USB devices reach WSL through usbipd, and this module is also the only
+    # thing that turns services.udev back on (WSL defaults it off, there is no
+    # hardware to probe). Without it no udev rules are generated at all, so the
+    # adb rule in the android-tools aspect would never run.
+    wsl.usbip.enable = true;
+
+    # The device attached here advertises its adb function as ff/ff/ff.
+    programs.android-tools.vendorUsb = true;
+
     # Foreign binaries (the host's nvidia-smi, vendor CUDA wheels, ...) go
     # through nix-ld, and NIX_LD_LIBRARY_PATH is the only library path they
     # consult. Expose the Windows driver libs there instead of polluting the
