@@ -31,6 +31,11 @@
                 --set-default INFISICAL_DISABLE_UPDATE_CHECK true
             '';
           })
+
+          # python3 packages
+          (python3.withPackages (ps: [
+            ps.ptpython
+          ]))
         ];
 
         # Replace uv to unstable one
