@@ -41,6 +41,8 @@
           # zip
           _7zz
           unzip
+          unrar
+          zip
 
           # modern unix
           neovim
