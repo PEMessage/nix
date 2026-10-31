@@ -9,7 +9,12 @@
           config.flake.modules.nixos.icons
         ];
 
-        programs.dank-material-shell.enable = true;
+        # 2.x is packaged in unstable; use it instead of compiling locally.
+        programs.dank-material-shell = {
+          enable = true;
+          package = pkgs.unstable.dux-shell;
+          quickshell.package = pkgs.unstable.quickshell;
+        };
 
         environment.systemPackages = [
           pkgs.inotify-tools # dms-plugin-registry wallpaperBing daemon dependency
@@ -19,7 +24,7 @@
       };
 
     homeManager =
-      { ... }:
+      { pkgs, ... }:
       {
         imports = [
           inputs.dms.homeModules.dank-material-shell
@@ -30,6 +35,8 @@
 
         programs.dank-material-shell = {
           enable = true;
+          package = pkgs.unstable.dux-shell;
+          quickshell.package = pkgs.unstable.quickshell;
           niri = {
             # DMS preset keybinds (launcher, notifications, settings, lock,
             # powermenu, clipboard, volume/brightness keys, ...).
@@ -49,7 +56,7 @@
 
           managePluginSettings = true;
           settings = {
-            configVersion = 16;
+            configVersion = 42;
 
             # Let DMS run the user matugen templates from
             # ~/.config/matugen/config.toml; the rofi aspect renders its

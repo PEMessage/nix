@@ -9,6 +9,8 @@ in
       let
         # exactly one home-manager user per host; use it as the greetd login user
         userName = builtins.head (builtins.attrNames config.home-manager.users);
+        # Use the unstable package (prebuilt) instead of compiling niri.
+        niriPkg = pkgs.unstable.niri;
       in
       {
         imports = [
@@ -19,7 +21,7 @@ in
 
         programs.niri = {
           enable = true;
-          package = pkgs.niri;
+          package = niriPkg;
         };
 
         # xdg portals (required by flatpak / sandboxed apps)
@@ -32,7 +34,7 @@ in
         services.greetd = {
           enable = true;
           settings.default_session = {
-            command = "${pkgs.niri}/bin/niri-session";
+            command = "${niriPkg}/bin/niri-session";
             user = userName;
           };
         };
@@ -63,6 +65,9 @@ in
         };
 
         config = {
+          # Keep the HM module's validation/package in sync with the session.
+          programs.niri.package = pkgs.unstable.niri;
+
           # entry point: generated settings (nix.kdl), feature-contributed lines,
           # then optional unmanaged local overrides (local.kdl).
           xdg.configFile."niri/config.kdl".text = lib.concatLines (
@@ -75,7 +80,7 @@ in
           programs.niri.settings = {
             xwayland-satellite = {
               enable = true;
-              path = lib.getExe inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.xwayland-satellite-unstable;
+              path = lib.getExe pkgs.unstable.xwayland-satellite;
             };
 
             window-rules = [
