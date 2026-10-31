@@ -101,6 +101,12 @@ sudo nixos-rebuild switch --flake .#wks-revo
 sudo nixos-rebuild switch --flake .#wsl
 ```
 
+## Security-critical updates
+
+Security-critical updates (currently the kernel) are sourced from the
+`nixpkgs-small` input rather than the main `nixpkgs`, so a CVE bump only touches
+the affected paths and can be deployed independently of userland updates.
+
 ## Conventions
 
 - Add a feature: create `aspects/<domain>/<name>.nix` with `flake.aspects.<name>`,

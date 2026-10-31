@@ -5,6 +5,10 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
+    # Security-critical updates (currently the kernel); not followed by any
+    # other input, so a CVE fix does not re-pin userland.
+    nixpkgs-small.url = "github:nixos/nixpkgs?ref=nixos-26.05-small";
+
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";

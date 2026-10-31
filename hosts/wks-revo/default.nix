@@ -7,6 +7,7 @@
   flake.modules.nixos."host.wks-revo" = { ... }: {
     imports = [
       config.flake.modules.nixos.tailscale-force-derp
+      config.flake.modules.nixos.kernel
     ];
 
     # Force Tailscale over DERP + FakeHTTP + BBR (see the tailscale-force-derp

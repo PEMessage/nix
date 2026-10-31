@@ -90,6 +90,8 @@
     modules = [
       ./_nixos/configuration.nix
       config.flake.modules.nixos."host.vm-citrine"
+      # flake-parts scope, so `config.flake` is the outer config here.
+      config.flake.modules.nixos.kernel
       config.flake.modules.nixos."user.pem"
       config.flake.modules.nixos.server
     ];
