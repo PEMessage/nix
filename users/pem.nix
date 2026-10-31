@@ -17,6 +17,9 @@
 
           # Enable for /dev/ttyUSB0 access
           "dialout"
+
+          # Enable for docker (from the `docker` aspect)
+          "docker"
         ];
         packages = with pkgs; [
           tree
