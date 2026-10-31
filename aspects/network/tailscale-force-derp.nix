@@ -61,6 +61,16 @@
         # LAN devices without Tailscale: route 100.64.0.0/10 via this host's LAN IP.
         services.tailscale.useRoutingFeatures = "server";
 
+        # LAN clients reach *other* 100.x via table 52 (routed, so forwarded by
+        # ts-forward), but one for this host's own tailscale IP is delivered
+        # locally: it enters INPUT on the LAN NIC and dies in nixos-fw, because
+        # only ts-input's `-i tailscale0 -j ACCEPT` would let it through. No LAN
+        # prefix needed: INPUT sees local deliveries only, and peers are routed,
+        # so `-d 100.64.0.0/10` here can only be one of our own tailnet addresses.
+        networking.firewall.extraCommands = ''
+          iptables -A nixos-fw ! -i ${config.services.tailscale.interfaceName} -d 100.64.0.0/10 -j ACCEPT
+        '';
+
         # FakeHTTP: disguise TCP as HTTP (needs root + nfnetlink_queue + iptables).
         systemd.services.fakehttp = {
           description = "FakeHTTP (obfuscate TCP as HTTP to bypass ISP throttling)";
