@@ -10,6 +10,19 @@
       config.flake.modules.nixos.kernel
     ];
 
+
+    # DDC/CI access without sudo. hardware.i2c.enable loads i2c-dev and
+    # installs a udev rule with `uaccess` (the locally logged-in seat user
+    # gets an ACL) and GROUP=i2c/MODE=0660. The group membership is for SSH
+    # sessions, which are not tied to a local seat and therefore do not get
+    # the uaccess ACL. i2c-tools provides i2ctransfer for raw DDC/CI tests.
+    hardware.i2c.enable = true;
+    # users.users.pem.extraGroups = [ "i2c" ];
+    environment.systemPackages = [
+      pkgs.i2c-tools
+      pkgs.ddcutil
+    ];
+
     # Force Tailscale over DERP + FakeHTTP + BBR (see the tailscale-force-derp
     # aspect).
     services.tailscaleForceDerp = {
