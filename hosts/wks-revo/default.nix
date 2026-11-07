@@ -10,17 +10,21 @@
       config.flake.modules.nixos.kernel
     ];
 
-
-    # DDC/CI access without sudo. hardware.i2c.enable loads i2c-dev and
-    # installs a udev rule with `uaccess` (the locally logged-in seat user
-    # gets an ACL) and GROUP=i2c/MODE=0660. The group membership is for SSH
-    # sessions, which are not tied to a local seat and therefore do not get
-    # the uaccess ACL. i2c-tools provides i2ctransfer for raw DDC/CI tests.
-    hardware.i2c.enable = true;
-    # users.users.pem.extraGroups = [ "i2c" ];
-    environment.systemPackages = [
-      pkgs.i2c-tools
-      pkgs.ddcutil
+    # Host-level DRM guards for the AMD DP AUX I2C error path. A partial AUX
+    # write can report a status byte larger than the requested transfer size;
+    # dm_dp_aux_transfer() trusts it as a byte count, drm_dp_i2c_drain_msg()
+    # subtracts it from size_t msg.size, and the resulting huge value makes
+    # drm_dp_i2c_do_msg() divide by zero. These are not monitor-toggle-only,
+    # so they live with the host rather than in the monitor-toggle aspect.
+    boot.kernelPatches = [
+      {
+        name = "drm-dp-guard-i2c-drain-underflow";
+        patch = ./patches/0001-drm-dp-guard-i2c-drain-underflow.patch;
+      }
+      {
+        name = "drm-amdgpu-validate-partial-aux-write";
+        patch = ./patches/0002-drm-amdgpu-validate-partial-aux-write.patch;
+      }
     ];
 
     # Force Tailscale over DERP + FakeHTTP + BBR (see the tailscale-force-derp

@@ -1,0 +1,20 @@
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+index 4fc371f..89cc254 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -2112,6 +2112,15 @@ static int drm_dp_i2c_drain_msg(struct drm_dp_aux *aux, struct drm_dp_aux_msg *o
+ 		if (err <= 0)
+ 			return err == 0 ? -EPROTO : err;
+ 
++		/*
++		 * A misbehaving sink (or a bogus partial-write status) can
++		 * report more bytes than requested. Never let that
++		 * underflow msg.size: the resulting huge value corrupts
++		 * the retry calculation in drm_dp_i2c_do_msg().
++		 */
++		if ((size_t)err > msg.size)
++			return -EPROTO;
++
+ 		if (err < msg.size && err < ret) {
+ 			drm_dbg_kms(aux->drm_dev,
+ 				    "%s: Partial I2C reply: requested %zu bytes got %d bytes\n",

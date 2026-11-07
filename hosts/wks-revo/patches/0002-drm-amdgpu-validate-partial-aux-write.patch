@@ -1,0 +1,19 @@
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 2e0895f..8993c1b 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -110,6 +110,14 @@ static ssize_t dm_dp_aux_transfer(struct drm_dp_aux *aux,
+ 			/*one byte indicating partially written bytes*/
+ 			drm_dbg_dp(adev_to_drm(adev), "AUX partially written\n");
+ 			result = payload.data[0];
++			/*
++			 * The status byte is not trustworthy: it can be a
++			 * data byte (for example the DDC/CI source address
++			 * 0x6e) instead of a byte count. Returning it would
++			 * underflow the I2C drain loop.
++			 */
++			if (result > (ssize_t)msg->size)
++				return -EIO;
+ 		} else if (!payload.reply[0])
+ 			/*I2C_ACK|AUX_ACK*/
+ 			result = msg->size;
