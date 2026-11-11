@@ -18,7 +18,7 @@
           })
         ];
 
-        nix.settings = {
+        nix.settings = (import ../../flake.nix).nixConfig // {
           experimental-features = [
             "nix-command"
             "flakes"

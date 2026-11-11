@@ -79,6 +79,18 @@
     flake-aspects.url = "github:denful/flake-aspects";
   };
 
+  nixConfig = {
+    extra-substituters = [
+      "https://mirrors.cernet.edu.cn/nix-channels/store"
+      "https://nix-community.cachix.org"
+      "https://niri.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSlZ6oezYhGhR+3W2964="
+    ];
+  };
+
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
@@ -86,18 +98,6 @@
       # attrpaths (`flake.*` / `config.flake.*`). See: https://flake.parts/debug
       debug = true;
       systems = [ "x86_64-linux" ];
-
-      flake.nixConfig = {
-        extra-substituters = [
-          "https://mirrors.cernet.edu.cn/nix-channels/store"
-          "https://nix-community.cachix.org"
-          "https://niri.cachix.org"
-        ];
-        extra-trusted-public-keys = [
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-          "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSlZ6oezYhGhR+3W2964="
-        ];
-      };
 
       imports = [
         inputs.flake-aspects.flakeModule
