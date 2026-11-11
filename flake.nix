@@ -14,6 +14,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Out-of-tree Android binder for the WSL kernel. `nixpkgs` is only used at
+    # runtime by its module; the .ko is built by its own pinned nixpkgs-build.
+    wsl-binder = {
+      url = "github:PEMessage/wsl-binder";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -84,10 +91,12 @@
       "https://mirrors.cernet.edu.cn/nix-channels/store"
       "https://nix-community.cachix.org"
       "https://niri.cachix.org"
+      "https://github.com/PEMessage/wsl-binder/releases/latest/download"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSlZ6oezYhGhR+3W2964="
+      "wsl-binder-1:+J56oPBLvItpSBAJ3RBDy6G9vxzPEP8VwXqJ6aIo2sI="
     ];
   };
 

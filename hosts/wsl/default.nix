@@ -1,8 +1,14 @@
 { inputs, config, ... }:
 {
   flake.modules.nixos."host.wsl" = { config, pkgs, ... }: {
+    imports = [ inputs.wsl-binder.nixosModules.default ];
+
     networking.hostName = "wsl";
     time.timeZone = "Asia/Shanghai";
+
+    # Out-of-tree binder for Microsoft's kernel; loads via modprobe's `install`
+    # rule straight from the store, so /lib/modules is never touched.
+    services.wsl-binder.enable = true;
 
     wsl.useWindowsDriver = true;
 

@@ -21,6 +21,22 @@
         "type": "github"
       }
     },
+    "binder-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792840475,
+        "narHash": "sha256-ESwapyW89dzjjDUO4axbso236Pcnuo+LnHZAtieAhKw=",
+        "owner": "choff",
+        "repo": "anbox-modules",
+        "rev": "4d68f90e11992601e8072bcbf6dcd6ca603364a9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "choff",
+        "repo": "anbox-modules",
+        "type": "github"
+      }
+    },
     "dank-qml-common": {
       "flake": false,
       "locked": {
@@ -290,6 +306,23 @@
         "type": "github"
       }
     },
+    "kernel-6.18.35.2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781829055,
+        "narHash": "sha256-JNrgMLF8dVU6i/wdSs7leeva3RAeprHn3wLZWslV8vg=",
+        "owner": "microsoft",
+        "repo": "WSL2-Linux-Kernel",
+        "rev": "1bd4ed3d4ada93738eef3fc2a66b674c640dc326",
+        "type": "github"
+      },
+      "original": {
+        "owner": "microsoft",
+        "ref": "linux-msft-wsl-6.18.35.2",
+        "repo": "WSL2-Linux-Kernel",
+        "type": "github"
+      }
+    },
     "niri": {
       "inputs": {
         "niri-stable": "niri-stable",
@@ -405,6 +438,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-build": {
+      "locked": {
+        "lastModified": 1791353474,
+        "narHash": "sha256-v72qr4LsSz61tQki/41nHKZKPY6NSeZavtGlAInOCng=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "2efa67fd26b6df417c33e4603185c701f260dd83",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1788057806,
@@ -503,7 +552,8 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-small": "nixpkgs-small",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "wsl-binder": "wsl-binder"
       }
     },
     "sops-nix": {
@@ -523,6 +573,29 @@
       "original": {
         "owner": "Mic92",
         "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "wsl-binder": {
+      "inputs": {
+        "binder-src": "binder-src",
+        "kernel-6.18.35.2": "kernel-6.18.35.2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "nixpkgs-build": "nixpkgs-build"
+      },
+      "locked": {
+        "lastModified": 1794397156,
+        "narHash": "sha256-j+dae6VpPf5gbKQTTZxK203ys27xocF3UwqnB6D0iO0=",
+        "owner": "PEMessage",
+        "repo": "wsl-binder",
+        "rev": "fea3bf964834ab13ca4f27d44d17a4dbbd296ee4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "PEMessage",
+        "repo": "wsl-binder",
         "type": "github"
       }
     },
