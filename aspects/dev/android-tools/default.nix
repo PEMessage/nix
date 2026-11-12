@@ -8,7 +8,9 @@
 #
 # `vendorUsb` swaps in a build whose interface filter also accepts that triple,
 # and adds the udev rule that lets adb open the device node (the distro rule
-# sets only know the standard vendors).
+# sets only know the standard vendors). That build also keeps an existing adb
+# server that reports version 31, rather than killing it over the version
+# mismatch.
 #
 # Enable per host, e.g. in the host module:
 #   programs.android-tools.vendorUsb = true;

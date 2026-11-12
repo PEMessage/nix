@@ -1,0 +1,20 @@
+Keep an already-running adb server that reports version 31 instead of killing it.
+
+adb refuses to talk to a server whose version differs from its own
+(ADB_SERVER_VERSION, 41 here): it prints a mismatch warning, kills the server
+and starts its own. Version 31 speaks the same wire protocol, so the restart
+is unnecessary and throws away the server that was already serving devices.
+
+--- a/vendor/adb/client/adb_client.cpp
++++ b/vendor/adb/client/adb_client.cpp
+@@ -308,7 +308,9 @@
+             }
+         }
+ 
+-        if (version != ADB_SERVER_VERSION) {
++        // Accept the older server version 31 as well. It speaks the same wire
++        // protocol, so there is no need to kill it just because it is older.
++        if (version != ADB_SERVER_VERSION && version != 31) {
+ #if defined(__linux__)
+             if (version > ADB_SERVER_VERSION && local) {
+                 // Try to re-exec the existing adb server's binary.
