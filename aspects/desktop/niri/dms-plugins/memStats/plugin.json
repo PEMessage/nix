@@ -1,0 +1,11 @@
+{
+    "id": "memStats",
+    "name": "Memory",
+    "description": "Memory usage tile in the control center; opens the system monitor sorted by memory.",
+    "version": "1.0.0",
+    "author": "pem",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./MemStatsWidget.qml",
+    "icon": "developer_board"
+}
