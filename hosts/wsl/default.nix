@@ -10,6 +10,15 @@
     # rule straight from the store, so /lib/modules is never touched.
     services.wsl-binder.enable = true;
 
+    # The binder release assets double as a binary cache. Keep it scoped to
+    # this host: in the top-level nixConfig every host queried GitHub for
+    # unrelated store paths, which trips the release-asset abuse detector
+    # (HTTP 429) and stalls builds for minutes.
+    nix.settings = {
+      extra-substituters = [ "https://github.com/PEMessage/wsl-binder/releases/latest/download" ];
+      extra-trusted-public-keys = [ "wsl-binder-1:+J56oPBLvItpSBAJ3RBDy6G9vxzPEP8VwXqJ6aIo2sI=" ];
+    };
+
     wsl.useWindowsDriver = true;
 
     # USB devices reach WSL through usbipd, and this module is also the only
