@@ -1,0 +1,11 @@
+{
+    "id": "panelCtl",
+    "name": "Monitor Panel",
+    "description": "Power state, power toggle and hardware brightness for the RTK panel on DP-3.",
+    "version": "1.0.0",
+    "author": "pem",
+    "type": "widget",
+    "capabilities": ["dankbar-widget"],
+    "component": "./PanelCtlWidget.qml",
+    "icon": "monitor"
+}

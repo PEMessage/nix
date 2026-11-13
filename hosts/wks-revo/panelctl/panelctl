@@ -1,0 +1,400 @@
+#!/usr/bin/env bash
+# Hardware brightness and power control for the RTK panel on DP-3 (wks-revo).
+#
+# The panel hides a working DDC/CI implementation behind the DisplayPort AUX
+# i2c adapter (i2c-14, "AMDGPU DM aux hw bus 3"). It answers VCP 0x10
+# (brightness, max 100) and 0xD6 (power mode), but the implementation is not
+# conformant:
+#
+#   * the MCCS version probe (VCP 0xDF) and other unsupported VCP reads answer
+#     -EIO, which makes plain `ddcutil detect` abort, hence
+#     --skip-ddc-checks --mccs=2.2
+#   * a single read succeeds only ~20-60% of the time and the failures come in
+#     bursts, so every operation retries here instead of relying on ddcutil's
+#     own retry counters (the failure is an AUX EIO from the GPU driver)
+#   * writes often report failure (DDCRC_RETRIES) while still applying, so a
+#     write is only considered done after reading the value back
+#   * raw value 1 is already visually bright; the register is linear 1..100
+#
+# There is no cache: every call queries the panel. The bar widget only runs it
+# while its popout is open, so idle desktop never talks to the bus.
+#
+# DMS's own DDC backend must stay disabled (DMS_NO_DDC=1, set by the aspect),
+# otherwise it takes brightness over from the gamma slider and races this
+# script for the i2c bus.
+#
+# Usage:
+#   panelctl status                     # on | standby | suspend | off | unknown
+#   panelctl brightness [PCT|+N|-N]     # percent (1..100), no arg = print
+#   panelctl raw [VAL|+N|-N]            # raw VCP value, no arg = print
+#   panelctl power [on|off|toggle]      # VCP 0xD6
+#   panelctl info                       # bus, MCCS version, brightness, power
+#
+# Environment:
+#   BUS=                override the auto-detected AUX i2c bus number
+#   CONNECTOR=DP-3      DRM connector whose AUX adapter is used
+#   DDCUTIL=ddcutil     ddcutil binary
+#   READ_TRIES=30       read attempts before giving up
+#   WRITE_TRIES=5       write+verify attempts for a brightness change
+#   WAKE_TRIES=15       power-on polls
+set -euo pipefail
+
+BUS="${BUS:-}"
+CONNECTOR="${CONNECTOR:-DP-3}"
+DDCUTIL="${DDCUTIL:-ddcutil}"
+ATTEMPT_TIMEOUT="${ATTEMPT_TIMEOUT:-5}"
+# The AUX channel can NAK for seconds in a row; 30 cheap attempts cost ~1 s in
+# the common case and ride out the burst without touching the panel again.
+READ_TRIES="${READ_TRIES:-30}"
+WRITE_TRIES="${WRITE_TRIES:-5}"
+WAKE_TRIES="${WAKE_TRIES:-15}"
+OFF_TRIES="${OFF_TRIES:-5}"
+
+# This panel reports max=100 for VCP 0x10. Fixing it here lets `brightness`
+# write without a prior read, which halves the number of flaky transactions.
+MAX_RAW="${MAX_RAW:-100}"
+
+VCP_BRIGHTNESS="10"
+VCP_POWER="d6"
+VCP_MCCS="df"
+
+LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/panelctl-$(id -u).lock"
+
+DDC_OPTS=()
+DEVICE=""
+
+# -- helpers ---------------------------------------------------------------
+
+need() { command -v "$1" >/dev/null 2>&1 || die "missing required command: $1"; }
+die() {
+    printf 'panelctl: %s\n' "$*" >&2
+    exit 1
+}
+
+usage() {
+    cat <<'EOF'
+usage: panelctl <command> [argument]
+
+  status                     print on | standby | suspend | off | unknown
+  brightness [PCT|+N|-N]     get/set hardware brightness as a percentage
+  raw [VAL|+N|-N]            get/set the raw VCP 0x10 value
+  power on|off|toggle        switch the panel power (VCP 0xD6)
+  info                       bus, MCCS version, brightness and power state
+EOF
+    exit "${1:-0}"
+}
+
+# One attempt is cheap (~125 ms on success, ~20 ms on NAK) and the retry loop
+# above it is what actually makes this reliable.
+resolve_bus() {
+    local dir sub
+    if [ -z "$BUS" ]; then
+        for dir in /sys/class/drm/card*-"$CONNECTOR"; do
+            [ -r "$dir/status" ] || continue
+            [ "$(cat "$dir/status")" = connected ] || continue
+            for sub in "$dir"/i2c-*; do
+                [ -d "$sub" ] || continue
+                BUS="${sub##*/i2c-}"
+                break 2
+            done
+        done
+    fi
+    [ -n "$BUS" ] || die "no connected $CONNECTOR AUX adapter (set BUS=... manually)"
+
+    DEVICE="/dev/i2c-$BUS"
+    # shellcheck disable=SC2054  # the commas belong to --maxtries=1,1,1
+    DDC_OPTS=(
+        --bus="$BUS"
+        --skip-ddc-checks
+        --mccs=2.2
+        --use-ioctl-io
+        --sleep-multiplier=1
+        --maxtries=1,1,1
+    )
+}
+
+take_lock() {
+    need flock
+    exec 9>"$LOCK_FILE"
+    flock -w 30 9 || die "another panelctl instance is using the DDC bus"
+}
+
+check_env() {
+    need "$DDCUTIL"
+    need awk
+    need timeout
+    [ -e "$DEVICE" ] || die "$DEVICE not found (hardware.i2c.enable?)"
+    [ -r "$DEVICE" ] && [ -w "$DEVICE" ] ||
+        die "no read/write access to $DEVICE (join group i2c or log in locally)"
+}
+
+# -- DDC primitives --------------------------------------------------------
+
+ddc_get() {
+    timeout "$ATTEMPT_TIMEOUT" "$DDCUTIL" "${DDC_OPTS[@]}" getvcp "$1" --terse 2>/dev/null
+}
+
+ddc_set() {
+    timeout "$ATTEMPT_TIMEOUT" "$DDCUTIL" "${DDC_OPTS[@]}" --noverify setvcp "$1" "$2" >/dev/null 2>&1 || true
+}
+
+# Retry a read until the panel answers; prints the terse line on stdout.
+read_terse() {
+    local code=$1 attempt out
+    for ((attempt = 1; attempt <= READ_TRIES; attempt++)); do
+        if out=$(ddc_get "$code") && [ -n "$out" ]; then
+            printf '%s\n' "$out"
+            return 0
+        fi
+        # Back off a little every few tries instead of hammering a NAKing AUX
+        # channel; keeps a full miss under ~3 s.
+        if ((attempt % 5 == 0)); then
+            sleep 0.25
+        else
+            sleep 0.05
+        fi
+    done
+    return 1
+}
+
+parse_brightness() {
+    awk '$1 == "VCP" && toupper($2) == "10" && $3 == "C" { print $4, $5; found = 1 } END { exit(found ? 0 : 1) }'
+}
+
+read_power_value() {
+    local line hex
+    line=$(read_terse "$VCP_POWER") || return 1
+    hex=$(printf '%s\n' "$line" | awk '$1 == "VCP" && toupper($2) == "D6" { print $4 }')
+    [[ $hex =~ ^x[0-9a-fA-F]+$ ]] || return 1
+    POWER=$((16#${hex#x}))
+}
+
+# -- brightness ------------------------------------------------------------
+
+read_brightness() {
+    local line parsed
+    line=$(read_terse "$VCP_BRIGHTNESS") || return 1
+    parsed=$(printf '%s\n' "$line" | parse_brightness) || return 1
+    read -r BR_CUR BR_MAX <<<"$parsed"
+    [[ $BR_CUR =~ ^[0-9]+$ && $BR_MAX =~ ^[0-9]+$ ]] || return 1
+    [ "$BR_MAX" -gt 0 ] || return 1
+}
+
+raw_from_percent() {
+    local pct=$1 max=$2 raw
+    raw=$(((pct * max + 50) / 100))
+    [ "$raw" -lt 1 ] && raw=1
+    [ "$raw" -gt "$max" ] && raw=$max
+    printf '%d\n' "$raw"
+}
+
+percent_from_raw() {
+    local raw=$1 max=$2 pct
+    pct=$(((raw * 100 + max / 2) / max))
+    [ "$pct" -lt 1 ] && pct=1
+    [ "$pct" -gt 100 ] && pct=100
+    printf '%d\n' "$pct"
+}
+
+set_raw_value() {
+    local target=$1 attempt line parsed cur max diff
+    for ((attempt = 1; attempt <= WRITE_TRIES; attempt++)); do
+        ddc_set "$VCP_BRIGHTNESS" "$target"
+        if line=$(read_terse "$VCP_BRIGHTNESS") &&
+            parsed=$(printf '%s\n' "$line" | parse_brightness); then
+            read -r cur max <<<"$parsed"
+            diff=$((cur - target))
+            [ "$diff" -lt 0 ] && diff=$((-diff))
+            if [ "$diff" -le 1 ]; then
+                return 0
+            fi
+        fi
+        sleep 0.2
+    done
+    return 1
+}
+
+cmd_brightness() {
+    local arg=${1:-} pct target
+    if [ -z "$arg" ]; then
+        if read_brightness; then
+            printf '%d%% (raw %d/%d)\n' "$(percent_from_raw "$BR_CUR" "$BR_MAX")" "$BR_CUR" "$BR_MAX"
+            return 0
+        fi
+        printf 'unknown\n'
+        return 2
+    fi
+
+    case $arg in
+        +* | -*)
+            read_brightness || die "cannot read current brightness (powered off? try: panelctl power on)"
+            pct=$(( $(percent_from_raw "$BR_CUR" "$BR_MAX") + arg ))
+            ;;
+        *[!0-9]*) die "invalid brightness: $arg (want 1..100, +N or -N)" ;;
+        *) pct=$arg ;;
+    esac
+    [ "$pct" -lt 1 ] && pct=1
+    [ "$pct" -gt 100 ] && pct=100
+
+    target=$(raw_from_percent "$pct" "$MAX_RAW")
+    set_raw_value "$target" || die "panel rejected brightness ${pct}% (raw $target/$MAX_RAW)"
+    printf '%d%% (raw %d/%d)\n' "$pct" "$target" "$MAX_RAW"
+}
+
+cmd_raw() {
+    local arg=${1:-} max=$MAX_RAW cur
+    if [ -z "$arg" ]; then
+        if read_brightness; then
+            printf 'raw %d/%d\n' "$BR_CUR" "$BR_MAX"
+            return 0
+        fi
+        printf 'unknown\n'
+        return 2
+    fi
+
+    case $arg in
+        +* | -*)
+            read_brightness || die "cannot read current brightness (powered off?)"
+            max=$BR_MAX
+            cur=$((BR_CUR + arg))
+            ;;
+        *[!0-9]*) die "invalid raw value: $arg" ;;
+        *) cur=$arg ;;
+    esac
+    [ "$cur" -lt 1 ] && cur=1
+    [ "$cur" -gt "$max" ] && cur=$max
+
+    set_raw_value "$cur" || die "panel rejected raw value $cur/$max"
+    printf 'raw %d/%d (%d%%)\n' "$cur" "$max" "$(percent_from_raw "$cur" "$max")"
+}
+
+# -- power -----------------------------------------------------------------
+
+power_state_word() {
+    case ${1:-} in
+        1) printf 'on' ;;
+        2) printf 'standby' ;;
+        3) printf 'suspend' ;;
+        4) printf 'off' ;;
+        5) printf 'off' ;;
+        *) printf 'unknown' ;;
+    esac
+}
+
+cmd_status() {
+    local word
+    if read_power_value; then
+        word=$(power_state_word "$POWER")
+        printf '%s\n' "$word"
+        case $word in
+            unknown) return 2 ;;
+        esac
+        return 0
+    fi
+    printf 'unknown\n'
+    return 2
+}
+
+cmd_power() {
+    local action=${1:-} attempt unreadable=0
+    case $action in
+        "" | -h | --help) usage 0 ;;
+    esac
+
+    case $action in
+        on) ;;
+        off) ;;
+        toggle)
+            if read_power_value && [ "$POWER" -eq 1 ]; then
+                action=off
+            else
+                action=on
+            fi
+            ;;
+        *) die "invalid power action: $action (want on|off|toggle)" ;;
+    esac
+
+    if [ "$action" = off ]; then
+        for ((attempt = 1; attempt <= OFF_TRIES; attempt++)); do
+            ddc_set "$VCP_POWER" "05"
+            if read_power_value; then
+                unreadable=0
+                if [ "$POWER" -ne 1 ]; then
+                    printf 'off\n'
+                    return 0
+                fi
+            else
+                unreadable=$((unreadable + 1))
+                # D6=05 cuts the scaler/USB side, so the bus going away is the
+                # expected outcome; two unreadable polls in a row is enough.
+                if [ "$unreadable" -ge 2 ]; then
+                    printf 'off\n'
+                    return 0
+                fi
+            fi
+            sleep 0.5
+        done
+        die "failed to power off the panel"
+    fi
+
+    for ((attempt = 1; attempt <= WAKE_TRIES; attempt++)); do
+        ddc_set "$VCP_POWER" "01"
+        sleep 1
+        if read_power_value && [ "$POWER" -eq 1 ]; then
+            printf 'on (after %d tries)\n' "$attempt"
+            return 0
+        fi
+    done
+    die "panel did not report D6=0x01 after $WAKE_TRIES tries"
+}
+
+# -- info ------------------------------------------------------------------
+
+cmd_info() {
+    local name line
+    name=$(cat "/sys/bus/i2c/devices/i2c-$BUS/name" 2>/dev/null || printf 'unknown')
+    printf 'bus:        %d (%s)\n' "$BUS" "$name"
+    if line=$(read_terse "$VCP_MCCS"); then
+        printf 'mccs:       %s\n' "$line"
+    else
+        printf 'mccs:       unreadable\n'
+    fi
+    if read_brightness; then
+        printf 'brightness: %d%% (raw %d/%d)\n' \
+            "$(percent_from_raw "$BR_CUR" "$BR_MAX")" "$BR_CUR" "$BR_MAX"
+    else
+        printf 'brightness: unreadable\n'
+    fi
+    if read_power_value; then
+        printf 'power:      %s (D6=0x%02x)\n' "$(power_state_word "$POWER")" "$POWER"
+    else
+        printf 'power:      unreadable\n'
+    fi
+}
+
+# -- main ------------------------------------------------------------------
+
+main() {
+    local cmd=${1:-}
+    [ "$#" -gt 0 ] && shift
+
+    case $cmd in
+        "" | -h | --help) usage 0 ;;
+        status | brightness | raw | power | info) ;;
+        *) die "unknown command: $cmd (try --help)" ;;
+    esac
+
+    resolve_bus
+    check_env
+    take_lock
+
+    case $cmd in
+        status) cmd_status ;;
+        brightness) cmd_brightness "${1:-}" ;;
+        raw) cmd_raw "${1:-}" ;;
+        power) cmd_power "${1:-}" ;;
+        info) cmd_info ;;
+    esac
+}
+
+main "$@"
