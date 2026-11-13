@@ -69,8 +69,17 @@
             leftWidgets = [
               "launcherButton"
               "workspaceSwitcher"
-              "focusedWindow"
-              "unifiedTaskbar"
+              # Native taskbar: compact window buttons, focused one
+              # highlighted. Click toggles/focuses, middle click closes, right
+              # click opens the window context menu, hover shows the title.
+              # No focusedWindow widget: its width tracked the active title and
+              # made the whole bar shift whenever focus changed.
+              {
+                id = "runningApps";
+                runningAppsCompactMode = true;
+                runningAppsGroupByApp = false;
+                runningAppsCurrentWorkspace = true;
+              }
             ];
             # Just the clock in the middle; music/weather live in the control
             # center (or not at all), keeping the bar quiet. Compact mode drops
@@ -166,7 +175,6 @@
             plugins = {
               wallpaperBing.enable = true;
               wallpaperBingWidget.enable = true;
-              unifiedTaskbar.enable = true;
               cpuStats.src = ./dms-plugins/cpuStats;
               memStats.src = ./dms-plugins/memStats;
             };
