@@ -44,15 +44,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    dms = {
+    dux = {
       url = "github:duxlabs-dev/dux-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dms-plugin-registry = {
+    dux-plugin-registry = {
       url = "github:duxlabs-dev/dux-plugin-registry";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dsearch = {
+    dux-search = {
       url = "github:duxlabs-dev/dux-search";
       inputs.nixpkgs.follows = "nixpkgs";
     };

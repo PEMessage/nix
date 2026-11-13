@@ -15,7 +15,7 @@ in
       {
         imports = [
           inputs.niri.nixosModules.niri
-          fp.flake.modules.nixos.dms
+          fp.flake.modules.nixos.dux
           fp.flake.modules.nixos.rofi
         ];
 
@@ -140,7 +140,7 @@ in
               "Mod+BracketRight".action.consume-or-expel-window-right = [ ];
 
               # expel the bottom window from the focused column to the right
-              # (Mod+Comma, the consume counterpart, is taken by the DMS keybinds)
+              # (Mod+Comma, the consume counterpart, is taken by the Dux keybinds)
               "Mod+Period".action.expel-window-from-column = [ ];
 
               "Mod+R".action.switch-preset-column-width = [ ];
@@ -195,7 +195,7 @@ in
               "Mod+Shift+S".action.screenshot = [ ];
               "Ctrl+Alt+Delete".action.quit = [ ];
 
-              # volume/brightness keys come from the DMS preset keybinds
+              # volume/brightness keys come from the Dux preset keybinds
               # (via `dms ipc`, with OSD feedback), so they are not set here.
 
               # media keys (MPRIS)

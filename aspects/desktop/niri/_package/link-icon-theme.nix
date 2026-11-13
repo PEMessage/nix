@@ -6,7 +6,7 @@
 # Gap: neither Papirus-Dark nor breeze-dark ship any *-symbolic.svg, so every
 # symbolic lookup falls through to Adwaita, whose symbolic icons hardcode the
 # light-theme foreground (#2e3436, #474747, ...). GTK recolors symbolic icons,
-# but Qt/Quickshell (DMS) does not, so they render near-invisible on the dark
+# but Qt/Quickshell (Dux) does not, so they render near-invisible on the dark
 # bar. LinkIcons therefore ships a recolored copy of Adwaita's symbolic set
 # (greys flattened to `foreground`, semantic accents kept) which wins the
 # lookup before the original Adwaita ones are ever reached.

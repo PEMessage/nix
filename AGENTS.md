@@ -115,6 +115,6 @@ the affected paths and can be deployed independently of userland updates.
 - Write module halves as functions (`nixos = { ... }: { ... }`), never a bare
   attrset — nixd only resolves options inside a lambda.
 - Comments explain **why**, not what — many decisions (apollo clipboard patch,
-  tailscale-force-derp FakeHTTP/BBR, niri/dms wiring) live only in comments.
+  tailscale-force-derp FakeHTTP/BBR, niri/dux wiring) live only in comments.
 - Local packages go in `pkgs/`; scripts in `script/` or inline `writeShellScriptBin`.
 

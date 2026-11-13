@@ -73,7 +73,7 @@
         "type": "github"
       }
     },
-    "dms": {
+    "dux": {
       "inputs": {
         "dank-qml-common": "dank-qml-common",
         "flake-compat": "flake-compat",
@@ -95,7 +95,7 @@
         "type": "github"
       }
     },
-    "dms-plugin-registry": {
+    "dux-plugin-registry": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -115,7 +115,7 @@
         "type": "github"
       }
     },
-    "dsearch": {
+    "dux-search": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -536,9 +536,9 @@
       "inputs": {
         "apollo-flake": "apollo-flake",
         "disko": "disko",
-        "dms": "dms",
-        "dms-plugin-registry": "dms-plugin-registry",
-        "dsearch": "dsearch",
+        "dux": "dux",
+        "dux-plugin-registry": "dux-plugin-registry",
+        "dux-search": "dux-search",
         "fcitx5-ori-theme": "fcitx5-ori-theme",
         "fcitx5-themes-candlelight": "fcitx5-themes-candlelight",
         "flake-aspects": "flake-aspects",

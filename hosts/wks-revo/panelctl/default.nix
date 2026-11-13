@@ -6,10 +6,10 @@
 # failed write that did apply; panelctl therefore retries and verifies every
 # operation itself (see the header of ./panelctl for the full quirks list).
 #
-# DMS probes every /dev/i2c-* adapter on its own and, once it finds this panel,
+# Dux probes every /dev/i2c-* adapter on its own and, once it finds this panel,
 # silently replaces the gamma brightness slider with a DDC device: the screen
-# jumps brighter (the gamma dim is reset to 100%) and DMS races ddcutil for
-# the bus, which shows up as a stuck slider and "unknown" reads. Keep DMS out
+# jumps brighter (the gamma dim is reset to 100%) and Dux races ddcutil for
+# the bus, which shows up as a stuck slider and "unknown" reads. Keep Dux out
 # of DDC so panelctl is the only writer.
 { config, ... }:
 let
@@ -59,8 +59,8 @@ in
     homeManager =
       { lib, ... }:
       {
-        # Read by systemd --user at login; niri (and DMS, which it spawns)
-        # inherit it. Without this DMS takes the panel over as soon as
+        # Read by systemd --user at login; niri (and Dux, which it spawns)
+        # inherit it. Without this Dux takes the panel over as soon as
         # /dev/i2c-14 exists.
         systemd.user.sessionVariables.DMS_NO_DDC = "1";
 
@@ -73,7 +73,7 @@ in
           };
         };
 
-        dms.barConfigs.default.rightWidgets = lib.mkBefore [ "panelCtl" ];
+        dux.barConfigs.default.rightWidgets = lib.mkBefore [ "panelCtl" ];
 
         # The panel is the only display, so turning it off from the bar would
         # otherwise leave no way to switch it back on from the session.

@@ -1,11 +1,11 @@
 { config, inputs, ... }:
 {
-  flake.aspects.dms = {
+  flake.aspects.dux = {
     nixos =
       { pkgs, ... }:
       {
         imports = [
-          inputs.dms.nixosModules.default
+          inputs.dux.nixosModules.default
           config.flake.modules.nixos.icons
         ];
 
@@ -18,10 +18,10 @@
         };
 
         environment.systemPackages = [
-          pkgs.inotify-tools # dms-plugin-registry wallpaperBing daemon dependency
+          pkgs.inotify-tools # dux-plugin-registry wallpaperBing daemon dependency
         ];
 
-        home-manager.sharedModules = [ config.flake.modules.homeManager.dms ];
+        home-manager.sharedModules = [ config.flake.modules.homeManager.dux ];
       };
 
     homeManager =
@@ -33,22 +33,22 @@
       }:
       {
         imports = [
-          inputs.dms.homeModules.dank-material-shell
-          inputs.dms.homeModules.niri
-          inputs.dms-plugin-registry.homeModules.default
-          inputs.dsearch.homeModules.default
+          inputs.dux.homeModules.dank-material-shell
+          inputs.dux.homeModules.niri
+          inputs.dux-plugin-registry.homeModules.default
+          inputs.dux-search.homeModules.default
         ];
 
         # Named bar configs keyed by id. Host modules can overlay a bar by
-        # id (e.g. dms.barConfigs.default.rightWidgets = lib.mkBefore [...]).
-        options.dms.barConfigs = lib.mkOption {
+        # id (e.g. dux.barConfigs.default.rightWidgets = lib.mkBefore [...]).
+        options.dux.barConfigs = lib.mkOption {
           type = lib.types.attrsOf (
             lib.types.submodule {
               freeformType = (pkgs.formats.json { }).type;
               options.rightWidgets = lib.mkOption {
                 # Widget entries are normally strings, but a widget can also be
                 # an object carrying per-widget options (clockCompactMode and
-                # the like), mirroring what DMS itself stores.
+                # the like), mirroring what Dux itself stores.
                 type = lib.types.listOf (
                   lib.types.either lib.types.str (lib.types.attrsOf lib.types.anything)
                 );
@@ -60,7 +60,7 @@
         };
 
         config = {
-          dms.barConfigs.default = {
+          dux.barConfigs.default = {
             name = "Main Bar";
             enabled = true;
             position = 0;
@@ -162,10 +162,10 @@
             package = pkgs.unstable.dux-shell;
             quickshell.package = pkgs.unstable.quickshell;
             niri = {
-              # DMS preset keybinds (launcher, notifications, settings, lock,
+              # Dux preset keybinds (launcher, notifications, settings, lock,
               # powermenu, clipboard, volume/brightness keys, ...).
               enableKeybinds = true;
-              # auto-start DMS with niri (dms run in spawn-at-startup).
+              # auto-start Dux with niri (dms run in spawn-at-startup).
               enableSpawn = true;
               # the includes hack would overwrite our managed config.kdl entry
               # point; the same dms/*.kdl files are included manually below.
@@ -175,15 +175,15 @@
             plugins = {
               wallpaperBing.enable = true;
               wallpaperBingWidget.enable = true;
-              cpuStats.src = ./dms-plugins/cpuStats;
-              memStats.src = ./dms-plugins/memStats;
+              cpuStats.src = ./dux-plugins/cpuStats;
+              memStats.src = ./dux-plugins/memStats;
             };
 
             managePluginSettings = true;
             settings = {
               configVersion = 42;
 
-              # Let DMS run the user matugen templates from
+              # Let Dux run the user matugen templates from
               # ~/.config/matugen/config.toml; the rofi aspect renders its
               # window-switcher theme there so it follows the dynamic palette.
               runUserMatugenTemplates = true;
@@ -193,7 +193,7 @@
               currentThemeName = "dynamic";
               currentThemeCategory = "dynamic";
 
-              # DMS-managed icon theme: the single meta-theme LinkIcons
+              # Dux-managed icon theme: the single meta-theme LinkIcons
               # (LinkIcons -> Papirus-Dark -> breeze-dark -> Adwaita -> hicolor).
               # perMode is off, so only iconThemeDark is used.
               iconThemeDark = "LinkIcons";
@@ -205,7 +205,7 @@
               foregroundLayerTransparency = 0.8;
               blurLayerOutlineOpacity = 0.2;
               # Control-center layout. This mirrors the SettingsSpec defaults
-              # (re-sync when DMS adds a new default tile) plus the local
+              # (re-sync when Dux adds a new default tile) plus the local
               # systemStats plugin tile: CPU/RAM moved here from the bar.
               controlCenterWidgets = [
                 { id = "user"; enabled = true; w = 5; h = 1; }
@@ -230,14 +230,14 @@
                 { id = "edit"; enabled = true; w = 1; h = 1; small = true; }
               ];
 
-              barConfigs = lib.mapAttrsToList (id: bar: bar // { inherit id; }) config.dms.barConfigs;
+              barConfigs = lib.mapAttrsToList (id: bar: bar // { inherit id; }) config.dux.barConfigs;
             };
           };
 
           # dsearch: indexed filesystem search daemon (config generated on first run).
           programs.dsearch.enable = true;
 
-          # include the DMS-generated integration files (dms setup) into the niri
+          # include the Dux-generated integration files (dms setup) into the niri
           # config entry point; `optional` skips files not generated yet.
           niriConfig.lines = [
             "include optional=true \"dms/alttab.kdl\";"
@@ -251,7 +251,7 @@
           ];
 
           programs.niri.settings = {
-            # let the DMS wallpaper render behind windows instead of fighting the backdrop
+            # let the Dux wallpaper render behind windows instead of fighting the backdrop
             layer-rules = [
               {
                 matches = [

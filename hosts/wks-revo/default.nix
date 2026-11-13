@@ -48,7 +48,7 @@
       powerOnBoot = true;
     };
 
-    # DMS battery widget and control-center power profile.
+    # Dux battery widget and control-center power profile.
     services.upower.enable = true;
     services.power-profiles-daemon.enable = true;
 
