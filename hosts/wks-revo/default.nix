@@ -9,6 +9,7 @@
       config.flake.modules.nixos.tailscale-force-derp
       config.flake.modules.nixos.kernel
       config.flake.modules.nixos.panelctl
+      config.flake.modules.nixos.ha-bridge
     ];
 
     # Host-level DRM guards for the AMD DP AUX I2C error path. A partial AUX
