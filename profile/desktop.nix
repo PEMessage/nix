@@ -11,5 +11,6 @@
     config.flake.modules.nixos.core-app
     config.flake.modules.nixos.flatpak
     config.flake.modules.nixos.niri
+    config.flake.modules.nixos.hidraw
   ];
 }
