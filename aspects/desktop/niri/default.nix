@@ -30,12 +30,36 @@ in
           extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
         };
 
-        # lightweight login manager with autologin straight into niri
+        # Autologin straight into niri.
+        #
+        # `initial_session` is a real login: greetd opens a PAM session for the
+        # user, and that is the session logind reports as the user's display
+        # session (Class=user, Type=wayland, seat0). The old form — `niri-session`
+        # as `default_session` — ran the compositor as the *greeter*, so this
+        # user's only session was Class=greeter, and polkit's
+        # `sd_pid_get_session()` (it walks the cgroup) failed for every process
+        # of the desktop. polkit then fell back to `sd_uid_get_display()`, whose
+        # answer drifted (2 at boot, 3 once something else logged in), so the
+        # DMS polkit agent kept registering under a session id that the requests
+        # were not in, and no password dialog ever appeared.
+        #
+        # Note the processes themselves still run in `session.slice/niri.service`
+        # (niri-session starts a user unit), not in `session-2.scope`, so the
+        # cgroup lookup still fails. What changed is that the fallback now has
+        # exactly one answer.
         services.greetd = {
           enable = true;
-          settings.default_session = {
-            command = "${niriPkg}/bin/niri-session";
-            user = userName;
+          settings = {
+            initial_session = {
+              command = "${niriPkg}/bin/niri-session";
+              user = userName;
+            };
+            # greetd wants a default session; this is also what runs after a
+            # logout, and there it is a greeter session again.
+            default_session = {
+              command = "${niriPkg}/bin/niri-session";
+              user = userName;
+            };
           };
         };
         services.displayManager.enable = false;

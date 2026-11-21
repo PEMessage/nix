@@ -21,6 +21,13 @@
           pkgs.inotify-tools # dux-plugin-registry wallpaperBing daemon dependency
         ];
 
+        # Dux ships its own polkit agent (quickshell's `PolkitAgent {}`), but
+        # niri's module starts a KDE one unconditionally
+        # (systemd.user.services.niri-flake-polkit). Two agents registered on
+        # one session means whichever wins shows the dialog; keep Dux's so the
+        # password prompt matches the rest of the shell.
+        systemd.user.services.niri-flake-polkit.enable = false;
+
         home-manager.sharedModules = [ config.flake.modules.homeManager.dux ];
       };
 
