@@ -5,3 +5,4 @@ REFACTOR.md
 # hosts/<host>/secret.yaml and ARE committed.
 /secrets/
 /secrets.bak/
+/result

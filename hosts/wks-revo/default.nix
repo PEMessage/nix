@@ -18,14 +18,20 @@
     # subtracts it from size_t msg.size, and the resulting huge value makes
     # drm_dp_i2c_do_msg() divide by zero. These are not monitor-toggle-only,
     # so they live with the host rather than in the monitor-toggle aspect.
-    boot.kernelPatches = [
+    #
+    # Both files compile into loadable modules (CONFIG_DRM_AMDGPU=m,
+    # CONFIG_DRM_DISPLAY_HELPER=m), so they are rebuilt as standalone modules
+    # instead of via `boot.kernelPatches`; that keeps the kernel package and
+    # the other modules cached (see aspects/core/kernel.nix). A patch that
+    # touches built-in code has to go back to `boot.kernelPatches`.
+    boot.kernelModulePatches = [
       {
-        name = "drm-dp-guard-i2c-drain-underflow";
-        patch = ./patches/0001-drm-dp-guard-i2c-drain-underflow.patch;
+        module = "drivers/gpu/drm/display";
+        patches = [ ./patches/0001-drm-dp-guard-i2c-drain-underflow.patch ];
       }
       {
-        name = "drm-amdgpu-validate-partial-aux-write";
-        patch = ./patches/0002-drm-amdgpu-validate-partial-aux-write.patch;
+        module = "drivers/gpu/drm/amd/amdgpu";
+        patches = [ ./patches/0002-drm-amdgpu-validate-partial-aux-write.patch ];
       }
     ];
 
